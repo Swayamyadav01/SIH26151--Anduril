@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>De-Anonymization Platform — SIH 26151</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Nav -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <div class="logo">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span class="logo-title">DE-ANON PLATFORM</span>
+        </div>
+        <div class="workspace-tabs">
+          <button class="tab active" data-tab="tab-overview">
+            <i class="fa-solid fa-house"></i> Overview
+          </button>
+          <button class="tab" data-tab="tab-website">
+            <i class="fa-solid fa-globe"></i> Websites
+          </button>
+          <button class="tab" data-tab="tab-user">
+            <i class="fa-solid fa-user"></i> Users
+          </button>
+          <button class="tab" data-tab="tab-reports">
+            <i class="fa-solid fa-file-lines"></i> Reports
+          </button>
+        </div>
+      </div>
+      <div class="nav-right">
+        <button class="icon-btn" id="theme-toggle" title="Toggle Theme"><i class="fa-solid fa-sun"></i></button>
+        <span class="status-indicator">
+          <span class="dot"></span> Online
+        </span>
+        <div class="user-profile">
+          <i class="fa-regular fa-circle-user"></i> Analyst
+        </div>
+      </div>
+    </header>
+
+    <!-- TAB 1: OVERVIEW -->
+    <main class="main-workspace stage-view" id="tab-overview">
+      <div class="stage-container">
+        <!-- 3 Stat Cards -->
+        <div class="overview-cards-row">
+          <div class="stat-box">
+            <div class="stat-icon blue"><i class="fa-solid fa-globe"></i></div>
+            <div class="stat-content">
+              <span class="stat-num" id="stat-sites">42</span>
+              <span class="stat-label">Monitored Websites</span>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon amber"><i class="fa-solid fa-server"></i></div>
+            <div class="stat-content">
+              <span class="stat-num" id="stat-ips">18</span>
+              <span class="stat-label">Real Server IPs Found</span>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
+            <div class="stat-content">
+              <span class="stat-num" id="stat-persons">12</span>
+              <span class="stat-label">Persons Identified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Primary Paths -->
+        <div class="choose-path-grid">
+          <div class="path-card" id="btn-goto-web-card">
+            <div class="path-icon-wrap blue"><i class="fa-solid fa-globe"></i></div>
+            <div class="path-text">
+              <h3>Website Investigation</h3>
+              <p>Scan dark web .onion sites to find where their servers are hosted and reveal real IP addresses.</p>
+              <button class="btn-primary"><i class="fa-solid fa-arrow-right"></i> Open Websites</button>
+            </div>
+          </div>
+          <div class="path-card" id="btn-goto-user-card">
+            <div class="path-icon-wrap green"><i class="fa-solid fa-user"></i></div>
+            <div class="path-text">
+              <h3>User Investigation</h3>
+              <p>Analyze forum usernames, digital footprints, and writing styles to find real identities.</p>
+              <button class="btn-primary"><i class="fa-solid fa-arrow-right"></i> Open Users</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Discoveries -->
+        <div class="card-panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Discoveries</h3>
+          </div>
+          <div class="table-scroll-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>TYPE</th>
+                  <th>TARGET</th>
+                  <th>DISCOVERY</th>
+                  <th>METHOD</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="overview-recent-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 2: WEBSITES -->
+    <main class="main-workspace stage-view" id="tab-website" style="display: none;">
+      <div class="stage-container">
+        <!-- Target Selector -->
+        <div class="target-select-bar">
+          <div class="select-col">
+            <label>Target Website (.onion)</label>
+            <select id="web-target-select">
+              <option value="intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion" selected>
+                intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion (IntelBroker Portal)
+              </option>
+              <option value="shinyforum73jskduw73jsndk29shdu39s83hd.onion">
+                shinyforum73jskduw73jsndk29shdu39s83hd.onion (ShinyHunters Forum)
+              </option>
+              <option value="usdodinfra83jdhx7923hskduw73jsndk29sh.onion">
+                usdodinfra83jdhx7923hskduw73jsndk29sh.onion (USDoD Operational Node)
+              </option>
+              <option value="cleanvault88jshduw73jsndk29shdu39s83hd.onion">
+                cleanvault88jshduw73jsndk29shdu39s83hd.onion (Clean Vault - Protected)
+              </option>
+            </select>
+          </div>
+          <button class="btn-primary" id="btn-run-web-scan">
+            <i class="fa-solid fa-magnifying-glass"></i> Check Server Leaks
+          </button>
+        </div>
+
+        <!-- Result Banner -->
+        <div class="result-banner" id="web-result-banner">
+          <div class="res-col">
+            <span class="res-label">Target Website</span>
+            <span class="res-val mono" id="web-res-onion">intelbrk83...onion</span>
+          </div>
+          <div class="res-col">
+            <span class="res-label">Real Server IP</span>
+            <div class="ip-chip" id="web-res-ip-chip">
+              <i class="fa-solid fa-server"></i>
+              <span id="web-res-ip">185.220.101.45</span>
+            </div>
+          </div>
+          <div class="res-col">
+            <span class="res-label">Location</span>
+            <span class="res-val" id="web-res-loc"><i class="fa-solid fa-location-dot text-amber"></i> Bucharest, Romania</span>
+          </div>
+          <div class="res-col">
+            <span class="res-label">Hosting Provider</span>
+            <span class="res-val" id="web-res-host">PrivateLayer Inc (AS208323)</span>
+          </div>
+        </div>
+        <!-- Split Grid -->
+        <div class="track-split-grid">
+          <!-- Left: Leaks -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-triangle-exclamation text-amber"></i> Server Leaks</h3>
+              <span class="threat-chip critical" id="web-leaks-count">3 Server Leaks Found</span>
+            </div>
+            <div class="leaks-body" id="web-leaks-list"></div>
+          </div>
+
+          <!-- Right: Map -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-network-wired text-blue"></i> Server Map</h3>
+            </div>
+            <div class="canvas-wrap">
+              <div class="graph-canvas" id="web-canvas"></div>
+            </div>
+            <div class="map-inspector-bar" id="web-inspector">
+              <span class="muted-text text-sm">Click any node to see details.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 3: USERS -->
+    <main class="main-workspace stage-view" id="tab-user" style="display: none;">
+      <div class="stage-container">
+        <!-- Target Selector -->
+        <div class="target-select-bar">
+          <div class="select-col">
+            <label>Target Username</label>
+            <select id="user-target-select">
+              <option value="IntelBroker" selected>IntelBroker</option>
+              <option value="USDoD">USDoD</option>
+            </select>
+          </div>
+          <button class="btn-primary" id="btn-run-user-analysis">
+            <i class="fa-solid fa-user-check"></i> Analyze User
+          </button>
+        </div>
+
+        <!-- Result Banner -->
+        <div class="result-banner" id="user-result-banner">
+          <div class="res-col">
+            <span class="res-label">Username</span>
+            <span class="res-val" id="user-res-handle">IntelBroker</span>
+          </div>
+          <div class="res-col">
+            <span class="res-label">Real Identity</span>
+            <span class="res-val text-green" style="font-size:15px; font-weight:700" id="user-res-name">
+              <i class="fa-solid fa-user-check"></i> Kai V. Larson
+            </span>
+          </div>
+          <div class="res-col">
+            <span class="res-label">Location</span>
+            <span class="res-val" id="user-res-loc"><i class="fa-solid fa-earth-europe text-blue"></i> Eastern Europe</span>
+          </div>
+          <div class="res-col">
+            <span class="res-label">Writing Match</span>
+            <span class="res-val" style="color:var(--accent-blue); font-weight:700" id="user-res-match">94.8% Match</span>
+          </div>
+        </div>
+        <!-- Split Grid -->
+        <div class="track-split-grid">
+          <!-- Left: Attributes -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-fingerprint text-green"></i> Digital Footprints</h3>
+            </div>
+            <div class="user-details-body" id="user-details-container"></div>
+          </div>
+
+          <!-- Right: Map -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-diagram-project text-green"></i> Identity Map</h3>
+            </div>
+            <div class="canvas-wrap">
+              <div class="graph-canvas" id="user-canvas"></div>
+            </div>
+            <div class="map-inspector-bar" id="user-inspector">
+              <span class="muted-text text-sm">Click any node to see details.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 4: REPORTS -->
+    <main class="main-workspace stage-view" id="tab-reports" style="display: none;">
+      <div class="stage-container">
+        <div class="reports-options-grid">
+          <!-- Website Report -->
+          <div class="card-panel report-box">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-globe text-blue"></i> Website Server Report</h3>
+            </div>
+            <div class="report-box-body">
+              <p class="rep-desc">Summary of discovered server IP (185.220.101.45), hosting location, and technical leaks.</p>
+              <div class="rep-actions">
+                <button class="btn-primary" id="btn-print-web-report"><i class="fa-solid fa-print"></i> Print Report</button>
+                <button class="btn-secondary" id="btn-dl-web-json"><i class="fa-solid fa-download"></i> Download JSON</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Report -->
+          <div class="card-panel report-box">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-user text-green"></i> User Identity Report</h3>
+            </div>
+            <div class="report-box-body">
+              <p class="rep-desc">Summary of connected accounts, writing style, active hours, and suspected real identity.</p>
+              <div class="rep-actions">
+                <button class="btn-primary" id="btn-print-user-report"><i class="fa-solid fa-print"></i> Print Report</button>
+                <button class="btn-secondary" id="btn-dl-user-json"><i class="fa-solid fa-download"></i> Download JSON</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Modal -->
+        <div class="modal-overlay" id="report-modal" style="display: none;">
+          <div class="modal-card">
+            <div class="modal-header">
+              <h3 id="modal-report-title"><i class="fa-solid fa-file-lines"></i> Case Report</h3>
+              <button class="icon-btn" id="btn-close-rep-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modal-report-body"></div>
+            <div class="modal-footer">
+              <button class="btn-secondary" id="btn-cancel-rep-modal">Close</button>
+              <button class="btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

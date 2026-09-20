@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHADOWLINK // Dark Web Threat Actor De-Anonymization Platform</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Vis-Network & Chart.js -->
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Cyber Header -->
+    <header class="cyber-header">
+      <div class="header-brand">
+        <div class="brand-logo">
+          <i class="fa-solid fa-user-ninja text-neon-cyan"></i>
+        </div>
+        <div class="brand-title">
+          <h1>SHADOWLINK <span class="badge-ver">v2.4-OSINT</span></h1>
+          <p>DARK WEB THREAT ACTOR DE-ANONYMIZATION & INFRASTRUCTURE ATTRIBUTION SYSTEM (PSID: 26151)</p>
+        </div>
+      </div>
+
+      <div class="header-telemetry">
+        <div class="telemetry-pill">
+          <span class="pulse-dot active"></span>
+          <span>AUTONOMOUS CRAWLER: <strong>ONLINE</strong></span>
+        </div>
+        <div class="telemetry-pill">
+          <i class="fa-solid fa-server text-neon-purple"></i>
+          <span>ONION SCANNERS: <strong>4 ACTIVE</strong></span>
+        </div>
+        <div class="telemetry-pill">
+          <i class="fa-solid fa-clock text-neon-cyan"></i>
+          <span id="system-clock">00:00:00 UTC</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <div class="workspace-layout">
+      <!-- Sidebar Navigation -->
+      <nav class="cyber-sidebar">
+        <div class="nav-section-title">ANALYTICAL MODULES</div>
+        <ul class="nav-menu">
+          <li class="nav-item active" data-tab="tab-overview">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Executive Overview</span>
+          </li>
+          <li class="nav-item" data-tab="tab-search">
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+            <span>Threat Actor Query</span>
+          </li>
+          <li class="nav-item" data-tab="tab-graph">
+            <i class="fa-solid fa-diagram-project"></i>
+            <span>Persona Fusion Graph</span>
+          </li>
+          <li class="nav-item" data-tab="tab-scanner">
+            <i class="fa-solid fa-shield-virus"></i>
+            <span>Infrastructure Scanner</span>
+          </li>
+          <li class="nav-item" data-tab="tab-stylometry">
+            <i class="fa-solid fa-brain"></i>
+            <span>AI Stylometry Engine</span>
+          </li>
+          <li class="nav-item" data-tab="tab-export">
+            <i class="fa-solid fa-file-export"></i>
+            <span>Reports & Exports</span>
+          </li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <div class="security-banner">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>CONFIDENTIAL OSINT LAB</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content Container -->
+      <main class="cyber-content">
+        
+        <!-- TAB 1: EXECUTIVE OVERVIEW -->
+        <section id="tab-overview" class="tab-page active">
+          <div class="page-header">
+            <h2><i class="fa-solid fa-chart-line text-neon-cyan"></i> Global Threat Intelligence Telemetry</h2>
+            <p>Real-time de-anonymization metrics, origin server discoveries, and threat level breakdown.</p>
+          </div>
+
+          <!-- Stat Cards Grid -->
+          <div class="stats-grid">
+            <div class="stat-card border-cyan">
+              <div class="stat-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+              <div class="stat-data">
+                <div class="stat-value" id="stat-total-actors">0</div>
+                <div class="stat-label">MONITORED THREAT ACTORS</div>
+              </div>
+            </div>
+
+            <div class="stat-card border-red">
+              <div class="stat-icon"><i class="fa-solid fa-location-crosshairs"></i></div>
+              <div class="stat-data">
+                <div class="stat-value text-neon-red" id="stat-deanonymized-ips">0</div>
+                <div class="stat-label">CLEARNET ORIGIN IPS EXPOSED</div>
+              </div>
+            </div>
+
+            <div class="stat-card border-purple">
+              <div class="stat-icon"><i class="fa-solid fa-database"></i></div>
+              <div class="stat-data">
+                <div class="stat-value" id="stat-total-leaks">0</div>
+                <div class="stat-label">INDEXED LEAK REPOSITORIES</div>
+              </div>
+            </div>
+
+            <div class="stat-card border-green">
+              <div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div>
+              <div class="stat-data">
+                <div class="stat-value text-neon-green" id="stat-avg-confidence">0%</div>
+                <div class="stat-label">AVG ATTRIBUTION CONFIDENCE</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Charts & Recent Discoveries Grid -->
+          <div class="grid-2col mt-4">
+            <div class="glass-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-chart-pie text-neon-cyan"></i> Threat Category Distribution</h3>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-categories"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-radar text-neon-red"></i> Recent Origin IP De-Anonymizations</h3>
+              </div>
+              <div class="table-container">
+                <table class="cyber-table" id="table-recent-deanonymized">
+                  <thead>
+                    <tr>
+                      <th>Threat Actor</th>
+                      <th>Hidden Service (.onion)</th>
+                      <th>Attributed Clearnet IP</th>
+                      <th>Confidence</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: THREAT ACTOR QUERY & SEARCH -->
+        <section id="tab-search" class="tab-page">
+          <div class="page-header">
+            <h2><i class="fa-solid fa-magnifying-glass-location text-neon-cyan"></i> Multi-Marketplace Actor Search & Query</h2>
+            <p>Query dark web threat actors across handles, PGP key fingerprints, crypto wallets, onion domains, or clearnet IPs.</p>
+          </div>
+
+          <div class="filter-bar glass-panel">
+            <div class="filter-group search-box">
+              <i class="fa-solid fa-search"></i>
+              <input type="text" id="search-input" placeholder="Search handle, PGP fingerprint, BTC/XMR wallet, IP address...">
+            </div>
+
+            <div class="filter-group">
+              <label>Threat Level:</label>
+              <select id="filter-threat-level">
+                <option value="">All Levels</option>
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Min Confidence:</label>
+              <select id="filter-confidence">
+                <option value="0">Any Confidence</option>
+                <option value="80">>= 80% High Confidence</option>
+                <option value="90">>= 90% Confirmed Entity</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" id="btn-apply-filter"><i class="fa-solid fa-filter"></i> Filter Results</button>
+          </div>
+
+          <div class="glass-panel mt-4">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-list-check text-neon-cyan"></i> Threat Actor Directory</h3>
+            </div>
+            <div class="table-container">
+              <table class="cyber-table" id="table-actors">
+                <thead>
+                  <tr>
+                    <th>Actor ID</th>
+                    <th>Primary Handle</th>
+                    <th>Category</th>
+                    <th>Threat Level</th>
+                    <th>Suspect Real Identity</th>
+                    <th>Attributed Origin IP</th>
+                    <th>Confidence</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: PERSONA FUSION GRAPH -->
+        <section id="tab-graph" class="tab-page">
+          <div class="page-header">
+            <h2><i class="fa-solid fa-diagram-project text-neon-cyan"></i> Multi-Source Relationship & Identity Graph</h2>
+            <p>Interactive graph linking dark web handles, PGP key fingerprints, crypto wallets, hidden services, and exposed clearnet origin IPs.</p>
+          </div>
+
+          <div class="graph-control-bar glass-panel">
+            <div class="legend-group">
+              <span class="legend-item"><span class="dot dot-red"></span> Actor</span>
+              <span class="legend-item"><span class="dot dot-purple"></span> Alias / Handle</span>
+              <span class="legend-item"><span class="dot dot-violet"></span> PGP Fingerprint</span>
+              <span class="legend-item"><span class="dot dot-green"></span> Crypto Wallet</span>
+              <span class="legend-item"><span class="dot dot-blue"></span> Onion Service</span>
+              <span class="legend-item"><span class="dot dot-pink"></span> De-anonymized Clearnet IP</span>
+            </div>
+            <div class="graph-actions">
+              <button class="btn btn-secondary" id="btn-reset-graph"><i class="fa-solid fa-rotate-left"></i> Reset View</button>
+              <button class="btn btn-primary" id="btn-toggle-physics"><i class="fa-solid fa-atom"></i> Toggle Physics</button>
+            </div>
+          </div>
+
+          <div class="graph-layout mt-3">
+            <div id="network-container" class="glass-panel"></div>
+            <div id="graph-inspect-panel" class="glass-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-circle-info text-neon-cyan"></i> Entity Node Inspector</h3>
+              </div>
+              <div id="graph-node-details">
+                <p class="text-muted">Click any node in the relationship graph to inspect identifiers, trust links, and attribution history.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: INFRASTRUCTURE SCANNER -->
+        <section id="tab-scanner" class="tab-page">
+          <div class="page-header">
+            <h2><i class="fa-solid fa-shield-virus text-neon-cyan"></i> Tor Hidden Service Misconfiguration & Origin Scanner</h2>
+            <p>Detect SSL cert matches, exposed /server-status pages, ETag leaks, SSH public key re-use, and JARM fingerprints to reveal origin servers.</p>
+          </div>
+
+          <div class="grid-2col">
+            <div class="glass-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-terminal text-neon-green"></i> Autonomous Scanner Console</h3>
+              </div>
+              <form id="form-scan">
+                <div class="form-group">
+                  <label>Target Onion Address (v3):</label>
+                  <div class="input-btn-group">
+                    <input type="text" id="input-scan-onion" placeholder="e.g. intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion" required>
+                    <button type="submit" class="btn btn-accent"><i class="fa-solid fa-bolt"></i> Run Scan</button>
+                  </div>
+                </div>
+              </form>
+
+              <div class="quick-select-list mt-3">
+                <span class="label">Quick Targets:</span>
+                <button class="chip" data-onion="intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion">IntelBroker Leak Site</button>
+                <button class="chip" data-onion="shinyforum73jskduw73jsndk29shdu39s83hd.onion">ShinyHunters Vault</button>
+                <button class="chip" data-onion="usdodinfra83jdhx7923hskduw73jsndk29sh.onion">USDoD Node</button>
+              </div>
+
+              <div class="terminal-window mt-4" id="scanner-terminal">
+                <div class="terminal-line text-muted">[SYSTEM READY] Awaiting target onion address submission...</div>
+              </div>
+            </div>
+
+            <div class="glass-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-bug text-neon-red"></i> Discovered Infrastructure Misconfigurations</h3>
+              </div>
+              <div id="scan-results-container">
+                <p class="text-muted">Run a scan or select a quick target to inspect technical evidence and origin IP attribution.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: AI STYLOMETRY ENGINE -->
+        <section id="tab-stylometry" class="tab-page">
+          <div class="page-header">
+            <h2><i class="fa-solid fa-brain text-neon-cyan"></i> AI Stylometric & Behavioral Persona De-Anonymizer</h2>
+            <p>Analyze forum posts and marketplace listings to fingerprint writing style, syntax habits, punctuation density, and timezone activity patterns.</p>
+          </div>
+
+          <div class="grid-2col">
+            <div class="glass-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-feather text-neon-purple"></i> Writing Style Corpus Workbench</h3>
+              </div>
+
+              <div class="sample-presets mb-3">
+                <span class="label">Load Sample Post:</span>
+                <button class="chip" id="preset-intelbroker">IntelBroker Leak Post</button>
+                <button class="chip" id="preset-mystery">Mystery Persona (Rebranded)</button>
+                <button class="chip" id="preset-usdod">USDoD Forum Post</button>
+                <button class="chip" id="preset-lockbit">LockBit Ransom Notice</button>
+              </div>
+
+              <div class="form-group">
+                <label>Text Sample for Attribution Analysis:</label>
+                <textarea id="text-stylometry-input" rows="8" placeholder="Paste forum message, marketplace description, or chat excerpt here..."></textarea>
+              </div>
+
+              <button class="btn btn-primary btn-block" id="btn-run-stylometry"><i class="fa-solid fa-wand-magic-sparkles"></i> Execute AI Persona Match</button>
+            </div>
+
+            <div class="glass-panel">
+              <div class="panel-header">
+                <h3><i class="fa-solid fa-fingerprint text-neon-cyan"></i> Attribution Confidence & Feature Breakdown</h3>
+              </div>
+
+              <div id="stylometry-results">
+                <div class="empty-state">
+                  <i class="fa-solid fa-microchip fa-3x text-muted mb-3"></i>
+                  <p class="text-muted">Enter text or select a preset sample to calculate persona attribution confidence scores.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 6: REPORTS & EXPORTS -->
+        <section id="tab-export" class="tab-page">
+          <div class="page-header">
+            <h2><i class="fa-solid fa-file-export text-neon-cyan"></i> Intelligence Reporting & Data Export Engine</h2>
+            <p>Export gathered intelligence and de-anonymization evidence into CSV, JSON, and printable threat reports.</p>
+          </div>
+
+          <div class="export-cards-grid">
+            <div class="glass-panel export-card">
+              <div class="export-icon"><i class="fa-solid fa-file-csv text-neon-green"></i></div>
+              <h3>CSV Export</h3>
+              <p>Download structured tabular data of threat actors, handles, PGP keys, crypto wallets, and origin IPs for spreadsheet analysis.</p>
+              <button class="btn btn-secondary" id="btn-export-csv"><i class="fa-solid fa-download"></i> Download CSV</button>
+            </div>
+
+            <div class="glass-panel export-card">
+              <div class="export-icon"><i class="fa-solid fa-file-code text-neon-purple"></i></div>
+              <h3>JSON Database Dump</h3>
+              <p>Export full nested graph and threat dossier dataset in JSON format for SIEM, MISP, or custom API integration.</p>
+              <button class="btn btn-secondary" id="btn-export-json"><i class="fa-solid fa-download"></i> Download JSON</button>
+            </div>
+
+            <div class="glass-panel export-card">
+              <div class="export-icon"><i class="fa-solid fa-file-pdf text-neon-red"></i></div>
+              <h3>Executive Dossier Report</h3>
+              <p>Generate printable formatted threat intelligence report complete with evidence timeline, origin IPs, and stylometric confidence breakdown.</p>
+              <button class="btn btn-primary" id="btn-export-pdf"><i class="fa-solid fa-print"></i> Print Intelligence Brief</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- THREAT ACTOR DOSSIER MODAL -->
+  <div class="modal-overlay" id="dossier-modal">
+    <div class="modal-dialog glass-panel">
+      <div class="modal-header">
+        <h3 id="modal-actor-name">Threat Actor Dossier</h3>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-actor-content">
+        <!-- Dynamic -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/app.js"></script>
+  <script src="js/graph.js"></script>
+  <script src="js/scanner.js"></script>
+  <script src="js/stylometry.js"></script>
+  <script src="js/export.js"></script>
+</body>
+</html>

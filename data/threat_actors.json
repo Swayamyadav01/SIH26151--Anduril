@@ -1,0 +1,373 @@
+[
+  {
+    "id": "TA-8821",
+    "primary_handle": "IntelBroker",
+    "category": "Data Broker & Ransomware Operator",
+    "threat_level": "CRITICAL",
+    "attribution_confidence": 92.4,
+    "suspect_real_entity": {
+      "name": "Kai V. Larson (Suspected Alias)",
+      "location": "Eastern Europe / Baltic Region",
+      "clearnet_ip": "185.220.101.45",
+      "isp": "PrivateLayer Romania",
+      "exposed_via": "SSL Certificate Serial Match & Apache Status Page Leak"
+    },
+    "handles": [
+      {
+        "platform": "BreachForums",
+        "handle": "IntelBroker",
+        "status": "Active",
+        "trust_rating": 9.8
+      },
+      {
+        "platform": "XSS.is",
+        "handle": "IntelBroker_v2",
+        "status": "Active",
+        "trust_rating": 9.5
+      },
+      {
+        "platform": "Exploit.in",
+        "handle": "IB_Broker",
+        "status": "Migrated",
+        "trust_rating": 9.1
+      },
+      {
+        "platform": "Telegram",
+        "handle": "@intelbroker_official",
+        "status": "Active",
+        "subscribers": 14200
+      },
+      {
+        "platform": "Dread",
+        "handle": "IntelBroker",
+        "status": "Active",
+        "trust_rating": 9.7
+      }
+    ],
+    "pgp_fingerprints": [
+      "4F89 A10B 72E4 9C12 D901 34BA 89FE 71C0 C0D8 99A2",
+      "99B1 C722 D104 88A9 11C2 A88B 3349 71FE D901 C722"
+    ],
+    "crypto_wallets": [
+      {
+        "currency": "BTC",
+        "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+        "total_received": "48.25 BTC",
+        "first_seen": "2023-04-12"
+      },
+      {
+        "currency": "BTC",
+        "address": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+        "total_received": "12.40 BTC",
+        "first_seen": "2023-09-01"
+      },
+      {
+        "currency": "XMR",
+        "address": "888tFuWv455YG2vy8bJJxz5b2z829v3Z90...a99x",
+        "total_received": "~320 XMR",
+        "first_seen": "2024-01-15"
+      }
+    ],
+    "infrastructure": [
+      "intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion",
+      "breachleaks83jdh9382jsd01jshd29s.onion"
+    ],
+    "stylometrics": {
+      "avg_sentence_len": 14.2,
+      "ttr_vocabulary_score": 0.74,
+      "unique_punctuation_habits": [
+        "Double space after period",
+        "Uses :: separator",
+        "Lowercase i in informal posts"
+      ],
+      "primary_timezone_peak": "18:00 - 02:00 UTC",
+      "probable_native_language": "Slavic / English L2"
+    },
+    "last_active": "2026-09-11T23:14:00Z",
+    "total_leaks_count": 84,
+    "high_profile_targets": [
+      "DC Health Link",
+      "US Cellular",
+      "General Electric",
+      "Europol Mock Sample"
+    ]
+  },
+  {
+    "id": "TA-4109",
+    "primary_handle": "ShinyHunters",
+    "category": "Organized Data Extortion Syndicate",
+    "threat_level": "CRITICAL",
+    "attribution_confidence": 88.7,
+    "suspect_real_entity": {
+      "name": "Sebastien G. (Associated Collective)",
+      "location": "Western Europe / North Africa",
+      "clearnet_ip": "194.26.29.112",
+      "isp": "HostSailor B.V.",
+      "exposed_via": "JARM Hash Match & Clearnet Domain CNAME Leak"
+    },
+    "handles": [
+      {
+        "platform": "RaidForums (Legacy)",
+        "handle": "ShinyHunters",
+        "status": "Seized",
+        "trust_rating": 9.9
+      },
+      {
+        "platform": "BreachForums v3",
+        "handle": "ShinyHunters_Admin",
+        "status": "Active",
+        "trust_rating": 9.9
+      },
+      {
+        "platform": "Telegram",
+        "handle": "@shiny_news",
+        "status": "Active",
+        "subscribers": 28900
+      }
+    ],
+    "pgp_fingerprints": [
+      "91B2 88C1 47A0 DB73 11F9 0021 A49B 812C 3341 00BA"
+    ],
+    "crypto_wallets": [
+      {
+        "currency": "BTC",
+        "address": "bc1q9d80cxy3s28j8xjskwkw83jdhz92jd83jskw",
+        "total_received": "182.50 BTC",
+        "first_seen": "2021-02-10"
+      },
+      {
+        "currency": "XMR",
+        "address": "44AFFq5zp5e5y2z829v3Z90k29shdu39sa99x...",
+        "total_received": "~1,450 XMR",
+        "first_seen": "2022-06-18"
+      }
+    ],
+    "infrastructure": [
+      "shinyforum73jskduw73jsndk29shdu39s83hd.onion",
+      "shinyvault92jshd01jshd29s83hd9382j.onion"
+    ],
+    "stylometrics": {
+      "avg_sentence_len": 18.5,
+      "ttr_vocabulary_score": 0.81,
+      "unique_punctuation_habits": [
+        "French style quotes",
+        "Capitalized acronyms",
+        "Bullet lists with hyphens"
+      ],
+      "primary_timezone_peak": "14:00 - 22:00 UTC",
+      "probable_native_language": "French / English"
+    },
+    "last_active": "2026-09-12T11:45:00Z",
+    "total_leaks_count": 130,
+    "high_profile_targets": [
+      "Ticketmaster Sample",
+      "Santander Mock",
+      "AT&T Archive",
+      "Wattpad Leak"
+    ]
+  },
+  {
+    "id": "TA-3012",
+    "primary_handle": "USDoD",
+    "category": "Government & Defense Data Extortionist",
+    "threat_level": "HIGH",
+    "attribution_confidence": 95.1,
+    "suspect_real_entity": {
+      "name": "Luan G. (Discovered Persona)",
+      "location": "South America (Brazil)",
+      "clearnet_ip": "177.136.21.90",
+      "isp": "Claro SA",
+      "exposed_via": "SSH Public Key Re-use & Clearnet Jabber Server Cert"
+    },
+    "handles": [
+      {
+        "platform": "BreachForums",
+        "handle": "USDoD",
+        "status": "Seized/Dormant",
+        "trust_rating": 9.4
+      },
+      {
+        "platform": "XSS.is",
+        "handle": "USDoD_Official",
+        "status": "Active",
+        "trust_rating": 9.2
+      },
+      {
+        "platform": "Telegram",
+        "handle": "@usdod_channel",
+        "status": "Active",
+        "subscribers": 9800
+      }
+    ],
+    "pgp_fingerprints": [
+      "33C0 8911 A098 A771 B891 00C9 418C D901 88A9 4410"
+    ],
+    "crypto_wallets": [
+      {
+        "currency": "BTC",
+        "address": "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy",
+        "total_received": "19.80 BTC",
+        "first_seen": "2023-01-20"
+      }
+    ],
+    "infrastructure": [
+      "usdodinfra83jdhx7923hskduw73jsndk29sh.onion"
+    ],
+    "stylometrics": {
+      "avg_sentence_len": 12.1,
+      "ttr_vocabulary_score": 0.69,
+      "unique_punctuation_habits": [
+        "Portuguese syntax artifacts",
+        "Uses bro & fam in forum replies",
+        "No trailing periods"
+      ],
+      "primary_timezone_peak": "12:00 - 20:00 UTC",
+      "probable_native_language": "Portuguese"
+    },
+    "last_active": "2026-09-08T19:30:00Z",
+    "total_leaks_count": 32,
+    "high_profile_targets": [
+      "Infoblox Leak",
+      "Airbus Vendor Database",
+      "NATO Contract Mock"
+    ]
+  },
+  {
+    "id": "TA-9904",
+    "primary_handle": "LockBitSupp",
+    "category": "Ransomware-as-a-Service (RaaS) Representative",
+    "threat_level": "CRITICAL",
+    "attribution_confidence": 85,
+    "suspect_real_entity": {
+      "name": "Dmitry Y. Khoroshev (Dmitry LockBit)",
+      "location": "Russian Federation",
+      "clearnet_ip": "95.173.136.72",
+      "isp": "Beeline Russia",
+      "exposed_via": "OFAC Sanctions Correlation & Infrastructure Mirror Certs"
+    },
+    "handles": [
+      {
+        "platform": "Exploit.in",
+        "handle": "LockBitSupp",
+        "status": "Active",
+        "trust_rating": 10
+      },
+      {
+        "platform": "XSS.is",
+        "handle": "LockBitSupp",
+        "status": "Active",
+        "trust_rating": 10
+      },
+      {
+        "platform": "Ransomware Blog",
+        "handle": "LockBit_Admin",
+        "status": "Active",
+        "trust_rating": 10
+      }
+    ],
+    "pgp_fingerprints": [
+      "778A 9922 C001 B891 A992 410C D901 88A9 33C0 C911"
+    ],
+    "crypto_wallets": [
+      {
+        "currency": "BTC",
+        "address": "bc1qlockbit382jsd01jshd29s83hd9382jshd73",
+        "total_received": "940.00 BTC",
+        "first_seen": "2019-09-01"
+      },
+      {
+        "currency": "XMR",
+        "address": "888xmrLockBit83jdhx7923hskduw73jsndk29...",
+        "total_received": "~12,500 XMR",
+        "first_seen": "2020-04-10"
+      }
+    ],
+    "infrastructure": [
+      "lockbitapt22v26wb42h5q73jskduw73jsndk29sh.onion",
+      "lockbitblog382jsd01jshd29s83hd9382j.onion"
+    ],
+    "stylometrics": {
+      "avg_sentence_len": 15.8,
+      "ttr_vocabulary_score": 0.77,
+      "unique_punctuation_habits": [
+        "Aggressive marketing terminology",
+        "Uses 1000$ placement",
+        "Bullet points with exclamation marks"
+      ],
+      "primary_timezone_peak": "07:00 - 17:00 UTC",
+      "probable_native_language": "Russian"
+    },
+    "last_active": "2026-09-12T16:00:00Z",
+    "total_leaks_count": 450,
+    "high_profile_targets": [
+      "Boeing Vendor Data",
+      "Royal Mail Ransomware",
+      "Continental AG"
+    ]
+  },
+  {
+    "id": "TA-1105",
+    "primary_handle": "EmoKing_V3",
+    "category": "Credential Harvester & Financial Fraudster",
+    "threat_level": "MEDIUM",
+    "attribution_confidence": 79.3,
+    "suspect_real_entity": {
+      "name": "Victor M. (Suspected Rebranded Persona)",
+      "location": "Southeast Asia / Remote",
+      "clearnet_ip": "103.251.140.18",
+      "isp": "VNPT Telecom",
+      "exposed_via": "Telegram Bot API Token Misconfiguration & ETag Leak"
+    },
+    "handles": [
+      {
+        "platform": "Dread",
+        "handle": "EmoKing_V3",
+        "status": "Active",
+        "trust_rating": 8.1
+      },
+      {
+        "platform": "Telegram",
+        "handle": "@emoking_logs",
+        "status": "Active",
+        "subscribers": 3400
+      },
+      {
+        "platform": "BreachForums",
+        "handle": "Emo_Vendor",
+        "status": "Migrated",
+        "trust_rating": 7.9
+      }
+    ],
+    "pgp_fingerprints": [
+      "12FE 34AA 56BB 78CC 90DD 11EE 22FF 3300 4411 5522"
+    ],
+    "crypto_wallets": [
+      {
+        "currency": "BTC",
+        "address": "1EmoKing73jskduw73jsndk29shdu39s83h",
+        "total_received": "5.40 BTC",
+        "first_seen": "2024-03-01"
+      }
+    ],
+    "infrastructure": [
+      "emokinglogs83jdhx7923hskduw73jsndk.onion"
+    ],
+    "stylometrics": {
+      "avg_sentence_len": 9.8,
+      "ttr_vocabulary_score": 0.58,
+      "unique_punctuation_habits": [
+        "Frequent use of pls",
+        "Multiple exclamation marks (!!!)",
+        "Emoji heavy"
+      ],
+      "primary_timezone_peak": "04:00 - 14:00 UTC",
+      "probable_native_language": "Vietnamese / English"
+    },
+    "last_active": "2026-09-10T08:15:00Z",
+    "total_leaks_count": 18,
+    "high_profile_targets": [
+      "Regional Bank Log Dumps",
+      "E-Commerce Stealer Logs"
+    ]
+  }
+]

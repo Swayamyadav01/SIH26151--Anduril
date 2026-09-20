@@ -1,0 +1,73 @@
+[
+  {
+    "sample_id": "SAMP-001",
+    "author_alias": "IntelBroker",
+    "actor_id": "TA-8821",
+    "source_platform": "BreachForums",
+    "text_content": "Hello members :: Today I am putting up for sale exclusive internal access and database of DC Health Link. Contains full PII, SSN, email addresses, and medical claims data. Payment strictly via XMR or BTC escrow. Serious buyers only. Do not message me asking for free samples without PGP verification. PGP key attached in profile :: Stay safe.",
+    "features": {
+      "avg_word_length": 5.1,
+      "punctuation_density": 0.082,
+      "emoji_count": 0,
+      "double_space_count": 3,
+      "separator_pattern": "::"
+    }
+  },
+  {
+    "sample_id": "SAMP-002",
+    "author_alias": "GhostBroker_2026 (Unknown Suspect)",
+    "actor_id": null,
+    "source_platform": "XSS.is",
+    "text_content": "Greeting brothers :: Today presenting new database dump from European telecom provider. Full customer logs, email hashes, and payment tokens included. Escrow mandatory :: BTC or Monero accepted. Verify PGP key before transfer.",
+    "features": {
+      "avg_word_length": 5.2,
+      "punctuation_density": 0.081,
+      "emoji_count": 0,
+      "double_space_count": 2,
+      "separator_pattern": "::"
+    }
+  },
+  {
+    "sample_id": "SAMP-003",
+    "author_alias": "ShinyHunters_Admin",
+    "actor_id": "TA-4109",
+    "source_platform": "BreachForums v3",
+    "text_content": "We have acquired over 1.3TB of corporate infrastructure files including source code repositories, AWS credentials, and user PII. Samples are available below (« ticketmaster_sample_part1.7z »). Contact us on Telegram @shiny_news for private deal negotiations.",
+    "features": {
+      "avg_word_length": 5.8,
+      "punctuation_density": 0.095,
+      "emoji_count": 0,
+      "quote_style": "« »"
+    }
+  },
+  {
+    "sample_id": "SAMP-004",
+    "author_alias": "USDoD_Official",
+    "actor_id": "TA-3012",
+    "source_platform": "XSS.is",
+    "text_content": "yo fam check this out. fresh defense vendor leaks dropping tonight bro. zero day exploit details plus military logistics contacts. no lowballers bro send BTC directly to escrow address.",
+    "features": {
+      "avg_word_length": 4.4,
+      "punctuation_density": 0.015,
+      "slang_words": [
+        "bro",
+        "fam",
+        "yo"
+      ],
+      "no_caps": true
+    }
+  },
+  {
+    "sample_id": "SAMP-005",
+    "author_alias": "LockBitSupp",
+    "actor_id": "TA-9904",
+    "source_platform": "Exploit.in",
+    "text_content": "Attention companies! LockBit 3.0 offers 1000$ bounty for any zero-day vulnerability in corporate VPN software! Join our affiliate network today! Best encryption speed, automatic decryption test, 24/7 negotiation portal! Do not pay fake decryptors!",
+    "features": {
+      "avg_word_length": 5.6,
+      "punctuation_density": 0.12,
+      "currency_format": "1000$",
+      "exclamation_freq": 0.04
+    }
+  }
+]

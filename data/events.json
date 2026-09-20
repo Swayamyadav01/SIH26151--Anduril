@@ -1,0 +1,92 @@
+[
+  {
+    "event_id": "EVT-901",
+    "actor_id": "TA-8821",
+    "actor_name": "IntelBroker",
+    "type": "FORUM_LEAK",
+    "timestamp": "2026-09-02T16:24:00Z",
+    "source": "BreachForums",
+    "detail": "Published General Electric corporate procurement database leak sample.",
+    "evidence_hash": "SHA256: 7f89c0...a10b"
+  },
+  {
+    "event_id": "EVT-902",
+    "actor_id": "TA-8821",
+    "actor_name": "IntelBroker",
+    "type": "PGP_SIGN",
+    "timestamp": "2026-09-04T18:10:00Z",
+    "source": "PGP Keyserver",
+    "detail": "Signed public statement using Key Fingerprint 4F89 A10B 72E4 9C12.",
+    "evidence_hash": "PGP-SIG: 0x4F89A10B"
+  },
+  {
+    "event_id": "EVT-903",
+    "actor_id": "TA-8821",
+    "actor_name": "IntelBroker",
+    "type": "WALLET_TX",
+    "timestamp": "2026-09-07T21:45:00Z",
+    "source": "Blockchair BTC",
+    "detail": "Transfer of 14.50 BTC to deposit address tagged with Binance KYC indicator.",
+    "evidence_hash": "TXID: 3a92...bc1q"
+  },
+  {
+    "event_id": "EVT-904",
+    "actor_id": "TA-8821",
+    "actor_name": "IntelBroker",
+    "type": "INFRA_SCAN",
+    "timestamp": "2026-09-12T14:10:00Z",
+    "source": "AcuMonitor / Passive Audit",
+    "detail": "Origin server 185.220.101.45 discovered via SSRF OOB callback and Apache status leak.",
+    "evidence_hash": "DE-ANON: 185.220.101.45 (96.8%)"
+  },
+  {
+    "event_id": "EVT-905",
+    "actor_id": "TA-8821",
+    "actor_name": "IntelBroker",
+    "type": "TELEGRAM_POST",
+    "timestamp": "2026-09-16T19:30:00Z",
+    "source": "Telegram Direct",
+    "detail": "Broadcast to 14,200 channel subscribers offering DC Health Link dataset.",
+    "evidence_hash": "TG-MSG: 89412"
+  },
+  {
+    "event_id": "EVT-906",
+    "actor_id": "TA-3012",
+    "actor_name": "USDoD",
+    "type": "FORUM_LEAK",
+    "timestamp": "2026-09-03T11:15:00Z",
+    "source": "BreachForums",
+    "detail": "Posted Infoblox infrastructure breach archive sample.",
+    "evidence_hash": "SHA256: 44c1...88a9"
+  },
+  {
+    "event_id": "EVT-907",
+    "actor_id": "TA-3012",
+    "actor_name": "USDoD",
+    "type": "INFRA_SCAN",
+    "timestamp": "2026-09-08T18:00:00Z",
+    "source": "SSH Public Key Match",
+    "detail": "OpenSSH ED25519 host key matched clearnet host 177.136.21.90 (Claro Brazil).",
+    "evidence_hash": "DE-ANON: 177.136.21.90 (95.1%)"
+  },
+  {
+    "event_id": "EVT-908",
+    "actor_id": "TA-4109",
+    "actor_name": "ShinyHunters",
+    "type": "INFRA_SCAN",
+    "timestamp": "2026-09-12T10:00:00Z",
+    "source": "JARM Fingerprint Match",
+    "detail": "TLS JARM signature 07d14d28d21... correlated to HostSailor IP 194.26.29.112.",
+    "evidence_hash": "DE-ANON: 194.26.29.112 (88.7%)"
+  },
+  {
+    "event_id": "EVT-909",
+    "actor_id": "TA-9904",
+    "actor_name": "LockBitSupp",
+    "type": "FORUM_LEAK",
+    "timestamp": "2026-09-10T15:20:00Z",
+    "source": "Exploit.in",
+    "detail": "Published Continental AG ransomware negotiation log excerpts.",
+    "evidence_hash": "SHA256: 99c0...c911"
+  }
+]

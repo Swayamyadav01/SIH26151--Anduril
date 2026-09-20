@@ -1,0 +1,667 @@
+{
+  "overview": {
+    "stats": {
+      "monitored_sites": 42,
+      "found_server_ips": 18,
+      "identified_persons": 12
+    },
+    "recent_discoveries": [
+      {
+        "type": "website",
+        "target": "IntelBroker Leak Portal",
+        "input_val": "intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion",
+        "result": "Server IP: 185.220.101.45 (Romania)",
+        "method": "Certificate Match & Server Status Leak"
+      },
+      {
+        "type": "user",
+        "target": "IntelBroker",
+        "input_val": "IntelBroker",
+        "result": "Suspect Name: Kai V. Larson",
+        "method": "Writing Style Analysis & Forum Accounts"
+      },
+      {
+        "type": "website",
+        "target": "USDoD Operational Node",
+        "input_val": "usdodinfra83jdhx7923hskduw73jsndk29sh.onion",
+        "result": "Server IP: 177.136.21.90 (Brazil)",
+        "method": "SSH Server Key Reuse"
+      },
+      {
+        "type": "user",
+        "target": "USDoD",
+        "input_val": "USDoD",
+        "result": "Suspect Name: Luan G.",
+        "method": "Writing Style & Language Pattern"
+      }
+    ]
+  },
+  "website_targets": {
+    "intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion": {
+      "onion_address": "intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion",
+      "site_title": "IntelBroker Official Leak Portal (.onion)",
+      "status": "SERVER_UNMASKED",
+      "server_ip": "185.220.101.45",
+      "hosting_provider": "PrivateLayer Inc (AS208323)",
+      "country": "Bucharest, Romania",
+      "leak_summary": "Server exposed through security certificate and status page misconfiguration.",
+      "leaks": [
+        {
+          "leak_name": "Security Certificate (SSL) Leak",
+          "severity": "HIGH",
+          "details": "Website security certificate contains real internet domain: api.privatelayer-ro.net",
+          "technical_proof": "Certificate Serial 0x4F89A10B points directly to Clearnet IP 185.220.101.45"
+        },
+        {
+          "leak_name": "Server Status Page Leak",
+          "severity": "CRITICAL",
+          "details": "Web server status page is open to the public without password",
+          "technical_proof": "Apache /server-status scoreboard broadcasts internal server name and active IP connections"
+        },
+        {
+          "leak_name": "Server Egress Test (SSRF)",
+          "severity": "CRITICAL",
+          "details": "Server made a direct connection outside Tor when asked to fetch a report",
+          "technical_proof": "External listener received direct connection from 185.220.101.45, bypassing Tor"
+        }
+      ],
+      "server_map": {
+        "nodes": [
+          {
+            "id": 1,
+            "x": 15,
+            "y": 50,
+            "type": "core",
+            "label": "Dark Web Site",
+            "meta": "intelbrk83...onion"
+          },
+          {
+            "id": 2,
+            "x": 38,
+            "y": 30,
+            "type": "hash",
+            "label": "Security Certificate (SSL)",
+            "meta": "api.privatelayer-ro.net"
+          },
+          {
+            "id": 3,
+            "x": 38,
+            "y": 70,
+            "type": "hash",
+            "label": "Server Status Page",
+            "meta": "/server-status open"
+          },
+          {
+            "id": 4,
+            "x": 65,
+            "y": 50,
+            "type": "ip",
+            "label": "Real Server IP: 185.220.101.45",
+            "asn": "AS208323",
+            "meta": "Origin Server (Romania)"
+          },
+          {
+            "id": 5,
+            "x": 90,
+            "y": 50,
+            "type": "core",
+            "label": "Hosting: PrivateLayer",
+            "meta": "Bucharest Datacenter"
+          }
+        ],
+        "edges": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      },
+      "passive_dorks": [
+        {
+          "category": "SSL / TLS Certificate",
+          "indicator": "Domain / Subject Alternative Name (SAN)",
+          "target": "api.privatelayer-ro.net",
+          "confidence_weight": 85,
+          "shodan": "ssl:\"api.privatelayer-ro.net\"",
+          "fofa": "cert=\"api.privatelayer-ro.net\"",
+          "description": "Locates IPv4 servers presenting certificates issued to api.privatelayer-ro.net",
+          "fofa_qbase64": "Y2VydD0iYXBpLnByaXZhdGVsYXllci1yby5uZXQi",
+          "shodan_search_url": "https://www.shodan.io/search?query=ssl%3A%22api.privatelayer-ro.net%22",
+          "fofa_search_url": "https://fofa.info/result?qbase64=Y2VydD0iYXBpLnByaXZhdGVsYXllci1yby5uZXQi"
+        },
+        {
+          "category": "SSL / TLS Certificate",
+          "indicator": "Certificate Serial Number (Unique Crypto ID)",
+          "target": "0x4F89A10B",
+          "confidence_weight": 98,
+          "shodan": "ssl.cert.serial:1334419723",
+          "fofa": "cert.serial=\"0x4f89a10b\"",
+          "description": "1-to-1 unique cryptographic match across IPv4 space sharing this exact certificate",
+          "fofa_qbase64": "Y2VydC5zZXJpYWw9IjB4NGY4OWExMGIi",
+          "shodan_search_url": "https://www.shodan.io/search?query=ssl.cert.serial%3A1334419723",
+          "fofa_search_url": "https://fofa.info/result?qbase64=Y2VydC5zZXJpYWw9IjB4NGY4OWExMGIi"
+        },
+        {
+          "category": "SSL / TLS Certificate",
+          "indicator": "Certificate SHA-256 Fingerprint",
+          "target": "a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2",
+          "confidence_weight": 99,
+          "shodan": "ssl.cert.fingerprint:\"a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2\"",
+          "fofa": "cert=\"a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2\"",
+          "description": "Exact SHA-256 digest match against globally indexed X.509 certificates",
+          "fofa_qbase64": "Y2VydD0iYTg5ZDcxYzFiMzRlNTZmMmE4OWQ3MWMxYjM0ZTU2ZjJhODlkNzFjMWIzNGU1NmYyYTg5ZDcxYzFiMzRlNTZmMiI=",
+          "shodan_search_url": "https://www.shodan.io/search?query=ssl.cert.fingerprint%3A%22a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2a89d71c1b34e56f2%22",
+          "fofa_search_url": "https://fofa.info/result?qbase64=Y2VydD0iYTg5ZDcxYzFiMzRlNTZmMmE4OWQ3MWMxYjM0ZTU2ZjJhODlkNzFjMWIzNGU1NmYyYTg5ZDcxYzFiMzRlNTZmMiI="
+        },
+        {
+          "category": "Exposed Status Pages",
+          "indicator": "Apache /server-status VirtualHost Leak",
+          "target": "api.privatelayer-ro.net",
+          "confidence_weight": 95,
+          "shodan": "http.title:\"Apache Status\" \"api.privatelayer-ro.net\"",
+          "fofa": "title=\"Apache Status\" && body=\"api.privatelayer-ro.net\"",
+          "description": "Exposed Apache scoreboard leaking internal server name 'api.privatelayer-ro.net' and client IPs",
+          "fofa_qbase64": "dGl0bGU9IkFwYWNoZSBTdGF0dXMiICYmIGJvZHk9ImFwaS5wcml2YXRlbGF5ZXItcm8ubmV0Ig==",
+          "shodan_search_url": "https://www.shodan.io/search?query=http.title%3A%22Apache%20Status%22%20%22api.privatelayer-ro.net%22",
+          "fofa_search_url": "https://fofa.info/result?qbase64=dGl0bGU9IkFwYWNoZSBTdGF0dXMiICYmIGJvZHk9ImFwaS5wcml2YXRlbGF5ZXItcm8ubmV0Ig=="
+        },
+        {
+          "category": "Exposed Status Pages",
+          "indicator": "Apache /server-status Scoreboard",
+          "target": "/server-status",
+          "confidence_weight": 80,
+          "shodan": "http.title:\"Apache Status\" \"Scoreboard\"",
+          "fofa": "title=\"Apache Status\" && body=\"Scoreboard\"",
+          "description": "Locates open Apache status pages leaking server vitals, vhosts, and PID tables",
+          "fofa_qbase64": "dGl0bGU9IkFwYWNoZSBTdGF0dXMiICYmIGJvZHk9IlNjb3JlYm9hcmQi",
+          "shodan_search_url": "https://www.shodan.io/search?query=http.title%3A%22Apache%20Status%22%20%22Scoreboard%22",
+          "fofa_search_url": "https://fofa.info/result?qbase64=dGl0bGU9IkFwYWNoZSBTdGF0dXMiICYmIGJvZHk9IlNjb3JlYm9hcmQi"
+        },
+        {
+          "category": "Asset Fingerprinting",
+          "indicator": "Favicon Murmur3 (MMH3) Hash",
+          "target": "-1204891102",
+          "confidence_weight": 88,
+          "shodan": "http.favicon.hash:-1204891102",
+          "fofa": "icon_hash=\"-1204891102\"",
+          "description": "Locates clearnet IPv4 servers hosting the exact identical website icon binary",
+          "fofa_qbase64": "aWNvbl9oYXNoPSItMTIwNDg5MTEwMiI=",
+          "shodan_search_url": "https://www.shodan.io/search?query=http.favicon.hash%3A-1204891102",
+          "fofa_search_url": "https://fofa.info/result?qbase64=aWNvbl9oYXNoPSItMTIwNDg5MTEwMiI="
+        },
+        {
+          "category": "Network & TLS Stack",
+          "indicator": "JARM TLS Fingerprint",
+          "target": "27d27d27d00000000d27d27d27d27d",
+          "confidence_weight": 70,
+          "shodan": "ssl.jarm:\"27d27d27d00000000d27d27d27d27d\"",
+          "fofa": "jarm=\"27d27d27d00000000d27d27d27d27d\"",
+          "description": "Matches custom TLS cipher negotiation stack characteristics across IPv4 space",
+          "fofa_qbase64": "amFybT0iMjdkMjdkMjdkMDAwMDAwMDBkMjdkMjdkMjdkMjdkIg==",
+          "shodan_search_url": "https://www.shodan.io/search?query=ssl.jarm%3A%2227d27d27d00000000d27d27d27d27d%22",
+          "fofa_search_url": "https://fofa.info/result?qbase64=amFybT0iMjdkMjdkMjdkMDAwMDAwMDBkMjdkMjdkMjdkMjdkIg=="
+        },
+        {
+          "category": "Server Headers",
+          "indicator": "ETag Filesystem Inode Match",
+          "target": "2d80-5f21a89c0b1c0",
+          "confidence_weight": 75,
+          "shodan": "http.header:\"ETag: \\\"2d80-\"",
+          "fofa": "header=\"ETag: \\\"2d80-\"",
+          "description": "Tracks unique disk filesystem inode (2d80) exposed in HTTP ETag headers",
+          "fofa_qbase64": "aGVhZGVyPSJFVGFnOiBcIjJkODAtIg==",
+          "shodan_search_url": "https://www.shodan.io/search?query=http.header%3A%22ETag%3A%20%5C%222d80-%22",
+          "fofa_search_url": "https://fofa.info/result?qbase64=aGVhZGVyPSJFVGFnOiBcIjJkODAtIg=="
+        }
+      ]
+    },
+    "cleanvault88jshduw73jsndk29shdu39s83hd.onion": {
+      "onion_address": "cleanvault88jshduw73jsndk29shdu39s83hd.onion",
+      "site_title": "Clean & Protected Dark Web Site (.onion)",
+      "status": "PROTECTED",
+      "server_ip": "Hidden behind Tor (No IP Leaked)",
+      "hosting_provider": "Unknown / Encrypted Circuit",
+      "country": "Protected",
+      "leak_summary": "This site is properly configured. No server leaks or certificate mistakes found.",
+      "leaks": [],
+      "server_map": {
+        "nodes": [
+          {
+            "id": 1,
+            "x": 30,
+            "y": 50,
+            "type": "core",
+            "label": "Dark Web Site",
+            "meta": "cleanvault88...onion"
+          },
+          {
+            "id": 2,
+            "x": 70,
+            "y": 50,
+            "type": "ip",
+            "label": "Tor Onion Circuit",
+            "meta": "Protected / Encrypted"
+          }
+        ],
+        "edges": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "passive_dorks": []
+    },
+    "shinyforum73jskduw73jsndk29shdu39s83hd.onion": {
+      "onion_address": "shinyforum73jskduw73jsndk29shdu39s83hd.onion",
+      "site_title": "ShinyHunters Private Vault & Forum (.onion)",
+      "status": "SERVER_UNMASKED",
+      "server_ip": "194.26.29.112",
+      "hosting_provider": "HostSailor B.V. (AS49453)",
+      "country": "Amsterdam, Netherlands",
+      "leak_summary": "Server exposed through JARM TLS stack fingerprint and proprietary cluster headers.",
+      "leaks": [
+        {
+          "leak_name": "JARM TLS Fingerprint Match",
+          "severity": "HIGH",
+          "details": "JARM TLS cipher handshake characteristics match clearnet node",
+          "technical_proof": "JARM 07d14d28d21d21d00042d42d42d42d7211ab9c2 matches 194.26.29.112:443"
+        },
+        {
+          "leak_name": "Proprietary HTTP Header Leak",
+          "severity": "HIGH",
+          "details": "Nginx response includes proprietary internal cluster routing header",
+          "technical_proof": "Header X-Shiny-Cluster: eu-west-node04.hostsailor.com leaked in HTTP/1.1 response"
+        },
+        {
+          "leak_name": "Favicon MMH3 Hash Match",
+          "severity": "HIGH",
+          "details": "Favicon icon binary MMH3 hash matches clearnet staging mirror",
+          "technical_proof": "Murmur3 hash -1204891102 discovered indexed by search engines at 194.26.29.112"
+        }
+      ],
+      "server_map": {
+        "nodes": [
+          {
+            "id": 1,
+            "x": 15,
+            "y": 50,
+            "type": "core",
+            "label": "Dark Web Site",
+            "meta": "shinyforum...onion"
+          },
+          {
+            "id": 2,
+            "x": 38,
+            "y": 30,
+            "type": "hash",
+            "label": "JARM Fingerprint",
+            "meta": "07d14d28d21d..."
+          },
+          {
+            "id": 3,
+            "x": 38,
+            "y": 70,
+            "type": "hash",
+            "label": "Cluster Header",
+            "meta": "X-Shiny-Cluster"
+          },
+          {
+            "id": 4,
+            "x": 65,
+            "y": 50,
+            "type": "ip",
+            "label": "Real Server IP: 194.26.29.112",
+            "asn": "AS49453",
+            "meta": "Origin Server (Netherlands)"
+          },
+          {
+            "id": 5,
+            "x": 90,
+            "y": 50,
+            "type": "core",
+            "label": "Hosting: HostSailor",
+            "meta": "Amsterdam Datacenter"
+          }
+        ],
+        "edges": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      }
+    },
+    "usdodinfra83jdhx7923hskduw73jsndk29sh.onion": {
+      "onion_address": "usdodinfra83jdhx7923hskduw73jsndk29sh.onion",
+      "site_title": "USDoD Communication Node (.onion)",
+      "status": "SERVER_UNMASKED",
+      "server_ip": "177.136.21.90",
+      "hosting_provider": "Claro SA (AS28573)",
+      "country": "Sao Paulo, Brazil",
+      "leak_summary": "Server de-anonymized via SSH host key reuse and XMPP certificate leak.",
+      "leaks": [
+        {
+          "leak_name": "SSH Host Key Cryptographic Reuse",
+          "severity": "CRITICAL",
+          "details": "OpenSSH server host key is identically reused on a clearnet IP address",
+          "technical_proof": "ED25519 Key SHA256: 4f89+a10b/usdod/brazil binding on 177.136.21.90:2222"
+        },
+        {
+          "leak_name": "XMPP / Jabber TLS Certificate Leak",
+          "severity": "CRITICAL",
+          "details": "Embedded chat server presents certificate issued to real domain",
+          "technical_proof": "Subject CN: xmpp.usdod-intel.br resolving directly to Claro SA origin"
+        }
+      ],
+      "server_map": {
+        "nodes": [
+          {
+            "id": 1,
+            "x": 15,
+            "y": 50,
+            "type": "core",
+            "label": "Dark Web Site",
+            "meta": "usdodinfra...onion"
+          },
+          {
+            "id": 2,
+            "x": 38,
+            "y": 30,
+            "type": "hash",
+            "label": "SSH Host Key",
+            "meta": "ED25519 Key Reuse"
+          },
+          {
+            "id": 3,
+            "x": 38,
+            "y": 70,
+            "type": "hash",
+            "label": "XMPP Certificate",
+            "meta": "xmpp.usdod-intel.br"
+          },
+          {
+            "id": 4,
+            "x": 65,
+            "y": 50,
+            "type": "ip",
+            "label": "Real Server IP: 177.136.21.90",
+            "asn": "AS28573",
+            "meta": "Origin Server (Brazil)"
+          },
+          {
+            "id": 5,
+            "x": 90,
+            "y": 50,
+            "type": "core",
+            "label": "Hosting: Claro SA",
+            "meta": "Sao Paulo Datacenter"
+          }
+        ],
+        "edges": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      }
+    }
+  },
+  "user_targets": {
+    "IntelBroker": {
+      "username": "IntelBroker",
+      "category": "Data Broker & Extortionist",
+      "suspected_name": "Kai V. Larson (Suspected Alias)",
+      "suspected_location": "Eastern Europe (Baltic Region)",
+      "active_hours": "16:00 \u2013 02:00 UTC (Active mainly in late evening)",
+      "writing_match": "94.8% match to confirmed posts",
+      "writing_style": "Uses custom double-colon separators (::), formal selling templates, and English as a secondary language.",
+      "accounts": [
+        {
+          "platform": "BreachForums",
+          "handle": "IntelBroker",
+          "status": "Active (High Trust Score)"
+        },
+        {
+          "platform": "Telegram",
+          "handle": "@intelbroker_official",
+          "status": "Active (14,200 followers)"
+        },
+        {
+          "platform": "Dread (Tor)",
+          "handle": "IntelBroker",
+          "status": "Active"
+        }
+      ],
+      "pgp_key": "4F89 A10B 72E4 9C12 D901 34BA 89FE 71C0 C0D8 99A2",
+      "crypto_wallet": "bc1q8x9... (14.50 BTC traced to an exchange deposit)",
+      "user_map": {
+        "nodes": [
+          {
+            "id": 1,
+            "x": 15,
+            "y": 50,
+            "type": "core",
+            "label": "Username: IntelBroker",
+            "meta": "Primary Alias"
+          },
+          {
+            "id": 2,
+            "x": 40,
+            "y": 25,
+            "type": "core",
+            "label": "BreachForums Account",
+            "meta": "Forum Activity"
+          },
+          {
+            "id": 3,
+            "x": 40,
+            "y": 50,
+            "type": "hash",
+            "label": "Digital Signature (PGP)",
+            "meta": "Key: 4F89 A10B..."
+          },
+          {
+            "id": 4,
+            "x": 40,
+            "y": 75,
+            "type": "hash",
+            "label": "Payment Wallet (Bitcoin)",
+            "meta": "14.50 BTC (Exchange KYC)"
+          },
+          {
+            "id": 5,
+            "x": 65,
+            "y": 50,
+            "type": "ip",
+            "label": "Writing Style: 94.8% Match",
+            "meta": "Peak: 16:00-02:00 UTC"
+          },
+          {
+            "id": 6,
+            "x": 90,
+            "y": 50,
+            "type": "core",
+            "label": "Suspect: Kai V. Larson",
+            "meta": "Real Identity Link"
+          }
+        ],
+        "edges": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      }
+    },
+    "USDoD": {
+      "username": "USDoD",
+      "category": "Defense Contractor Extortionist",
+      "suspected_name": "Luan G.",
+      "suspected_location": "South America (Brazil)",
+      "active_hours": "12:00 \u2013 20:00 UTC (Active during Americas daytime)",
+      "writing_match": "96.2% match to confirmed posts",
+      "writing_style": "Frequently uses informal greetings ('bro', 'fam'), skips ending periods, and shows Portuguese syntax patterns.",
+      "accounts": [
+        {
+          "platform": "XSS.is",
+          "handle": "USDoD_Official",
+          "status": "Active"
+        },
+        {
+          "platform": "Telegram",
+          "handle": "@usdod_channel",
+          "status": "Active (9,800 followers)"
+        }
+      ],
+      "pgp_key": "33C0 8911 A098 A771 B891 00C9 418C D901 88A9 4410",
+      "crypto_wallet": "3J98t1Wp... (19.80 BTC)",
+      "user_map": {
+        "nodes": [
+          {
+            "id": 1,
+            "x": 15,
+            "y": 50,
+            "type": "core",
+            "label": "Username: USDoD",
+            "meta": "Primary Alias"
+          },
+          {
+            "id": 2,
+            "x": 40,
+            "y": 30,
+            "type": "core",
+            "label": "XSS.is Forum Account",
+            "meta": "Forum Activity"
+          },
+          {
+            "id": 3,
+            "x": 40,
+            "y": 70,
+            "type": "hash",
+            "label": "Digital Signature (PGP)",
+            "meta": "Key: 33C0 8911..."
+          },
+          {
+            "id": 4,
+            "x": 65,
+            "y": 50,
+            "type": "ip",
+            "label": "Writing Style: 96.2% Match",
+            "meta": "Portuguese syntax traits"
+          },
+          {
+            "id": 5,
+            "x": 90,
+            "y": 50,
+            "type": "core",
+            "label": "Suspect: Luan G.",
+            "meta": "Brazil Location"
+          }
+        ],
+        "edges": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      }
+    }
+  }
+}

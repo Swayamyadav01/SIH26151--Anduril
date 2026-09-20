@@ -1,0 +1,144 @@
+[
+  {
+    "onion_address": "intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion",
+    "service_name": "IntelBroker Official Leak Portal",
+    "associated_actor_id": "TA-8821",
+    "status": "ACTIVE",
+    "port": 80,
+    "scan_date": "2026-09-12T14:10:00Z",
+    "misconfigurations": [
+      {
+        "type": "EXPOSED_SERVER_STATUS",
+        "description": "Apache /server-status page accessible without authentication",
+        "severity": "CRITICAL",
+        "evidence": "VHost leaks Clearnet ServerName: api.privatelayer-ro.net and Client IPs in active scoreboard"
+      },
+      {
+        "type": "SSL_CERTIFICATE_CLEARNET_MATCH",
+        "description": "TLS Cert SAN contains clearnet domain and origin IP",
+        "severity": "HIGH",
+        "evidence": "Cert Serial 0x4F89A10B issued to api.privatelayer-ro.net (185.220.101.45)"
+      },
+      {
+        "type": "ETAG_INODE_LEAK",
+        "description": "Apache ETag header exposes filesystem inode and hex timestamp",
+        "severity": "MEDIUM",
+        "evidence": "ETag: 2d80-5f21a89c0b1c0 matches clearnet mirror at 185.220.101.45"
+      }
+    ],
+    "origin_attribution": {
+      "clearnet_ip": "185.220.101.45",
+      "confidence_score": 96.8,
+      "hostname": "api.privatelayer-ro.net",
+      "country": "Romania",
+      "isp": "PrivateLayer Inc",
+      "matching_indicators": [
+        "SSL Cert Serial",
+        "Server-Status Scoreboard",
+        "JARM Hash 27d27d27d00000000d27d27d27d27d"
+      ]
+    }
+  },
+  {
+    "onion_address": "shinyforum73jskduw73jsndk29shdu39s83hd.onion",
+    "service_name": "ShinyHunters Private Vault & Forum",
+    "associated_actor_id": "TA-4109",
+    "status": "ACTIVE",
+    "port": 443,
+    "scan_date": "2026-09-12T10:00:00Z",
+    "misconfigurations": [
+      {
+        "type": "JARM_FINGERPRINT_MATCH",
+        "description": "JARM TLS fingerprint unique combination matching clearnet host",
+        "severity": "HIGH",
+        "evidence": "JARM: 07d14d28d21d21d00042d42d42d42d7211ab9c2 matches 194.26.29.112"
+      },
+      {
+        "type": "DEFAULT_SERVICE_BANNER",
+        "description": "Nginx version banner and custom header X-Shiny-Cluster leak",
+        "severity": "MEDIUM",
+        "evidence": "Header X-Shiny-Cluster: eu-west-node04.hostsailor.com"
+      }
+    ],
+    "origin_attribution": {
+      "clearnet_ip": "194.26.29.112",
+      "confidence_score": 89.2,
+      "hostname": "eu-west-node04.hostsailor.com",
+      "country": "Netherlands",
+      "isp": "HostSailor B.V.",
+      "matching_indicators": [
+        "JARM Fingerprint",
+        "X-Shiny-Cluster Header",
+        "Favicon MMH3 Hash (-1204891102)"
+      ]
+    }
+  },
+  {
+    "onion_address": "usdodinfra83jdhx7923hskduw73jsndk29sh.onion",
+    "service_name": "USDoD Communication Node",
+    "associated_actor_id": "TA-3012",
+    "status": "INACTIVE_MONITORED",
+    "port": 22,
+    "scan_date": "2026-09-08T18:00:00Z",
+    "misconfigurations": [
+      {
+        "type": "SSH_HOST_KEY_REUSE",
+        "description": "OpenSSH host key fingerprint identical to clearnet server",
+        "severity": "CRITICAL",
+        "evidence": "ED25519 Key SHA256: 4f89+a10b/usdod/brazil key re-used on 177.136.21.90:2222"
+      },
+      {
+        "type": "JABBER_CERT_LEAK",
+        "description": "Prosody XMPP TLS Cert exposed clearnet domain",
+        "severity": "HIGH",
+        "evidence": "Subject CN: xmpp.usdod-intel.br"
+      }
+    ],
+    "origin_attribution": {
+      "clearnet_ip": "177.136.21.90",
+      "confidence_score": 97.4,
+      "hostname": "xmpp.usdod-intel.br",
+      "country": "Brazil",
+      "isp": "Claro SA",
+      "matching_indicators": [
+        "SSH Host Key Fingerprint",
+        "XMPP TLS CN",
+        "DNS PTR Record"
+      ]
+    }
+  },
+  {
+    "onion_address": "lockbitapt22v26wb42h5q73jskduw73jsndk29sh.onion",
+    "service_name": "LockBit 3.0 Ransomware Blog & Negotiation Portal",
+    "associated_actor_id": "TA-9904",
+    "status": "ACTIVE",
+    "port": 80,
+    "scan_date": "2026-09-12T15:30:00Z",
+    "misconfigurations": [
+      {
+        "type": "MIRROR_HEADER_CORRELATION",
+        "description": "HTTP response header X-LB-Mirror-Node matches clearnet reverse proxy",
+        "severity": "HIGH",
+        "evidence": "Header X-LB-Mirror-Node: ru-proxy-09.beeline.ru"
+      },
+      {
+        "type": "DESCRIPTOR_TIMESTAMP_INCONSISTENCY",
+        "description": "Tor v3 descriptor publish timestamp matches clearnet NTP server sync log",
+        "severity": "MEDIUM",
+        "evidence": "Descriptor revision count 0x140a synchronized with 95.173.136.72:123"
+      }
+    ],
+    "origin_attribution": {
+      "clearnet_ip": "95.173.136.72",
+      "confidence_score": 87.5,
+      "hostname": "ru-proxy-09.beeline.ru",
+      "country": "Russia",
+      "isp": "Beeline Russia",
+      "matching_indicators": [
+        "X-LB-Mirror-Node Header",
+        "NTP Descriptor Sync",
+        "OFAC Wallet Ledger Link"
+      ]
+    }
+  }
+]
