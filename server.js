@@ -10,9 +10,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Serve both prototype and public directories
-app.use(express.static(path.join(__dirname, 'prototype')));
-app.use('/public', express.static(path.join(__dirname, 'public')));
+// Serve the frontend
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Load datasets
 const threatActors = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/threat_actors.json'), 'utf-8'));
