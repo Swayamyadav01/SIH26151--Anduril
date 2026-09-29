@@ -8,7 +8,7 @@
     <script>
         try {
             const saved = localStorage.getItem('anduril_theme') || localStorage.getItem('deproxy_theme');
-            document.documentElement.classList.toggle('dark', saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches));
+            document.documentElement.classList.toggle('dark', saved === 'dark');
         } catch (_) {}
     </script>
     <link rel="stylesheet" href="css/tailwind.css">
