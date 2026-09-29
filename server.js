@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const auditService = require('./backend/modules/passive_audit/audit_service');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,9 +11,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Serve both prototype and public directories
-app.use(express.static(path.join(__dirname, 'prototype')));
-app.use('/public', express.static(path.join(__dirname, 'public')));
+// Serve the frontend
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Load datasets
 const threatActors = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/threat_actors.json'), 'utf-8'));
@@ -346,7 +347,12 @@ app.post('/api/audit/passive', (req, res) => {
   const domain = body.domain;
   const serial = body.serial;
   const target = onion_address || 'intelbrk83jdhx7923hskduw73jsndk29shdu39s.onion';
-  
+
+  // If running on Vercel (or python3 is unavailable), use native JS auditor
+  if (process.env.VERCEL) {
+    return res.json(auditService.audit(target, domain, serial));
+  }
+
   const scriptPath = path.join(__dirname, 'backend/modules/passive_audit/passive_auditor.py');
   const args = [scriptPath, '--onion', target, '--json'];
   if (domain) args.push('--domain', domain);
@@ -354,15 +360,13 @@ app.post('/api/audit/passive', (req, res) => {
 
   execFile('python3', args, { timeout: 15000 }, (error, stdout, stderr) => {
     if (error) {
-      console.error('Passive audit error:', error, stderr);
-      return res.status(500).json({ error: 'Passive audit failed', details: stderr || error.message });
+      return res.json(auditService.audit(target, domain, serial));
     }
     try {
       const data = JSON.parse(stdout);
       return res.json(data);
     } catch (parseErr) {
-      console.error('Auditor output JSON parse error:', parseErr, stdout);
-      return res.status(500).json({ error: 'Invalid JSON output from auditor', raw: stdout });
+      return res.json(auditService.audit(target, domain, serial));
     }
   });
 });
@@ -372,18 +376,31 @@ app.get('/api/audit/dorks', (req, res) => {
   const targetDomain = domain || 'api.privatelayer-ro.net';
   const targetSerial = serial || '0x4F89A10B';
 
+  if (process.env.VERCEL) {
+    const dorks = auditService.generateAllDorks({ domain: targetDomain, cert_serial: targetSerial, favicon_hash: -1204891102, jarm: '27d27d27d00000000d27d27d27d27d', has_status_page: true });
+    return res.json({ dorks });
+  }
+
   const pyCode = `import sys, json; sys.path.append('${path.join(__dirname, "backend/modules/passive_audit")}'); from dork_builder import DorkBuilder; print(json.dumps(DorkBuilder.generate_all_dorks({'domain': '${targetDomain}', 'cert_serial': '${targetSerial}', 'favicon_hash': -1204891102, 'jarm': '27d27d27d00000000d27d27d27d27d', 'has_status_page': True})))`;
 
   execFile('python3', ['-c', pyCode], { timeout: 5000 }, (error, stdout, stderr) => {
-    if (error) return res.status(500).json({ error: error.message });
+    if (error) {
+      const dorks = auditService.generateAllDorks({ domain: targetDomain, cert_serial: targetSerial, favicon_hash: -1204891102, jarm: '27d27d27d00000000d27d27d27d27d', has_status_page: true });
+      return res.json({ dorks });
+    }
     try {
       res.json({ dorks: JSON.parse(stdout) });
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      const dorks = auditService.generateAllDorks({ domain: targetDomain, cert_serial: targetSerial, favicon_hash: -1204891102, jarm: '27d27d27d00000000d27d27d27d27d', has_status_page: true });
+      return res.json({ dorks });
     }
   });
 });
 
-app.listen(PORT, () => {
-  console.log('De-Anonymization Platform Backend running on http://localhost:' + PORT);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('De-Anonymization Platform Backend running on http://localhost:' + PORT);
+  });
+}
+
+module.exports = app;

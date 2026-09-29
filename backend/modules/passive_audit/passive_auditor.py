@@ -30,7 +30,7 @@ class PassiveAuditor:
         self.config_path = config_path or os.path.join(os.path.dirname(__file__), "config.json")
         self.shodan = ShodanClient(config_path=self.config_path)
         self.fofa = FOFAClient(config_path=self.config_path)
-        self.db_path = "/home/swayam/darkweb/data/hidden_services.json"
+        self.db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/hidden_services.json"))
 
     def load_known_target_profile(self, target_identifier):
         """Lookup known target forensic fingerprints dynamically from hidden services database."""
