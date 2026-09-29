@@ -102,7 +102,7 @@ app.get('/api/timeline', (req, res) => {
   res.json(filtered);
 });
 
-// 6. Relationship Link Graph
+// 6. Relationship Link Graph (Professional Enterprise Topology)
 app.get('/api/graph', (req, res) => {
   const nodes = [];
   const edges = [];
@@ -119,8 +119,13 @@ app.get('/api/graph', (req, res) => {
         threat_level: actor.threat_level,
         confidence: actor.attribution_confidence,
         shape: 'dot',
-        size: 26,
-        color: actor.threat_level === 'CRITICAL' ? '#ef4444' : '#f59e0b'
+        size: 22,
+        color: {
+          background: actor.threat_level === 'CRITICAL' ? '#f43f5e' : '#f59e0b',
+          border: actor.threat_level === 'CRITICAL' ? '#be123c' : '#b45309',
+          highlight: { background: '#14b8a6', border: '#0f766e' }
+        },
+        borderWidth: 2
       });
       addedNodes.add(actorNodeId);
     }
@@ -128,37 +133,97 @@ app.get('/api/graph', (req, res) => {
     actor.handles.forEach(h => {
       const handleId = 'handle_' + h.platform.replace(/[^a-zA-Z0-9]/g, '_') + '_' + h.handle;
       if (!addedNodes.has(handleId)) {
-        nodes.push({ id: handleId, label: h.platform + ': ' + h.handle, group: 'HANDLE', shape: 'diamond', size: 14, color: '#3b82f6' });
+        nodes.push({
+          id: handleId,
+          label: h.platform + ': ' + h.handle,
+          group: 'HANDLE',
+          shape: 'dot',
+          size: 11,
+          color: { background: '#3b82f6', border: '#1d4ed8', highlight: { background: '#60a5fa', border: '#2563eb' } },
+          borderWidth: 1.5
+        });
         addedNodes.add(handleId);
       }
-      edges.push({ from: actorNodeId, to: handleId, label: 'ALIAS_OF', color: { color: '#3b82f6' } });
+      edges.push({
+        from: actorNodeId,
+        to: handleId,
+        label: 'alias',
+        color: { color: '#94a3b8', highlight: '#3b82f6' },
+        arrows: { to: { enabled: true, scaleFactor: 0.4 } },
+        dashes: true
+      });
     });
 
     actor.pgp_fingerprints.forEach((pgp, idx) => {
       const pgpId = 'pgp_' + actor.id + '_' + idx;
       if (!addedNodes.has(pgpId)) {
-        nodes.push({ id: pgpId, label: 'PGP: ' + pgp.slice(0, 14) + '...', group: 'PGP', shape: 'triangle', size: 14, color: '#8b5cf6' });
+        nodes.push({
+          id: pgpId,
+          label: 'PGP: ' + pgp.slice(0, 10) + '...',
+          group: 'PGP',
+          shape: 'dot',
+          size: 11,
+          color: { background: '#8b5cf6', border: '#6d28d9', highlight: { background: '#a78bfa', border: '#7c3aed' } },
+          borderWidth: 1.5
+        });
         addedNodes.add(pgpId);
       }
-      edges.push({ from: actorNodeId, to: pgpId, label: 'SIGNED_BY', color: { color: '#8b5cf6' } });
+      edges.push({
+        from: actorNodeId,
+        to: pgpId,
+        label: 'signed_by',
+        color: { color: '#94a3b8', highlight: '#8b5cf6' },
+        arrows: { to: { enabled: true, scaleFactor: 0.4 } }
+      });
     });
 
     actor.crypto_wallets.forEach(w => {
       const walletId = 'wallet_' + w.currency + '_' + w.address.slice(0, 10);
       if (!addedNodes.has(walletId)) {
-        nodes.push({ id: walletId, label: w.currency + ': ' + w.address.slice(0, 8) + '...', group: 'WALLET', shape: 'star', size: 16, color: '#10b981' });
+        nodes.push({
+          id: walletId,
+          label: w.currency + ': ' + w.address.slice(0, 8) + '...',
+          group: 'WALLET',
+          shape: 'dot',
+          size: 11,
+          color: { background: '#10b981', border: '#047857', highlight: { background: '#34d399', border: '#059669' } },
+          borderWidth: 1.5
+        });
         addedNodes.add(walletId);
       }
-      edges.push({ from: actorNodeId, to: walletId, label: 'FUNDS_TO', color: { color: '#10b981' } });
+      edges.push({
+        from: actorNodeId,
+        to: walletId,
+        label: 'funds',
+        color: { color: '#94a3b8', highlight: '#10b981' },
+        arrows: { to: { enabled: true, scaleFactor: 0.4 } }
+      });
     });
 
     if (actor.suspect_real_entity && actor.suspect_real_entity.clearnet_ip) {
       const ipId = 'ip_' + actor.suspect_real_entity.clearnet_ip;
       if (!addedNodes.has(ipId)) {
-        nodes.push({ id: ipId, label: 'ORIGIN IP\n' + actor.suspect_real_entity.clearnet_ip, group: 'CLEARNET_IP', shape: 'box', size: 22, color: '#f59e0b' });
+        nodes.push({
+          id: ipId,
+          label: 'ORIGIN IP: ' + actor.suspect_real_entity.clearnet_ip,
+          group: 'CLEARNET_IP',
+          shape: 'box',
+          margin: 8,
+          size: 14,
+          color: { background: '#f59e0b', border: '#b45309', highlight: { background: '#fbbf24', border: '#d97706' } },
+          font: { color: '#ffffff', size: 10, face: 'JetBrains Mono' },
+          borderWidth: 2
+        });
         addedNodes.add(ipId);
       }
-      edges.push({ from: actorNodeId, to: ipId, label: 'UNMASKED (' + actor.attribution_confidence + '%)', color: { color: '#f59e0b' }, width: 2 });
+      edges.push({
+        from: actorNodeId,
+        to: ipId,
+        label: 'UNMASKED (' + actor.attribution_confidence + '%)',
+        color: { color: '#f59e0b', highlight: '#d97706' },
+        width: 2,
+        arrows: { to: { enabled: true, scaleFactor: 0.6 } }
+      });
     }
   });
 

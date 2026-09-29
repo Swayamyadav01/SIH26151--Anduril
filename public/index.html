@@ -4,28 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeProxy — Threat Intelligence Platform</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS with Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        primary: '#14b8a6',
-                        'primary-dark': '#0f766e',
-                        'primary-light': '#ccfbf1',
-                        danger: '#ef4444',
-                        warning: '#f59e0b',
-                        success: '#10b981',
-                        background: '#f8fafc',
-                        surface: '#ffffff',
-                        'border-color': '#e2e8f0',
-                        'text-main': '#334155',
-                        'text-muted': '#64748b'
+                        primary: "#14b8a6",
+                        "primary-dark": "#0f766e",
+                        "primary-light": "#ccfbf1",
+                        danger: "#ef4444",
+                        warning: "#f59e0b",
+                        success: "#10b981",
+                        background: "var(--bg-main)",
+                        surface: "var(--bg-surface)",
+                        "surface-secondary": "var(--bg-subtle)",
+                        "border-color": "var(--border-color)",
+                        "text-main": "var(--text-main)",
+                        "text-muted": "var(--text-muted)"
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
+                        sans: ["Inter", "system-ui", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"]
                     }
                 }
             }
@@ -39,96 +41,112 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 3D Interactive WebGL Globe -->
+    <script src="https://unpkg.com/globe.gl@2.46.2/dist/globe.gl.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-background text-text-main font-sans antialiased h-screen overflow-hidden flex">
+<body class="bg-background text-text-main font-sans antialiased h-screen overflow-hidden flex transition-colors duration-200">
     
     <!-- Sidebar -->
-    <aside class="w-60 bg-surface border-r border-border-color flex flex-col h-full z-20 shadow-sm flex-shrink-0" id="sidebar">
+    <aside class="w-60 bg-surface border-r border-border-color flex flex-col h-full z-20 shadow-xs flex-shrink-0 transition-colors duration-200" id="sidebar">
         <!-- Brand -->
         <div class="h-16 flex items-center px-5 border-b border-border-color flex-shrink-0">
-            <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center mr-2.5">
+            <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center mr-2.5 shadow-xs shadow-primary/20">
                 <i class="fa-solid fa-shield-halved text-white text-sm"></i>
             </div>
-            <span class="text-lg font-bold text-gray-800 tracking-tight">DeProxy</span>
+            <span class="text-lg font-bold text-text-main tracking-tight">DeProxy</span>
+            <span class="ml-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">OSINT</span>
         </div>
-        <!-- Platform Label -->
+        
+        <!-- Platform Subtitle -->
         <div class="px-5 pt-4 pb-2 flex-shrink-0">
-            <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">ThreatCam</span>
-            <p class="text-[11px] text-gray-400 mt-0.5">Threat Intelligence Platform</p>
+            <span class="text-[10px] font-bold text-text-muted uppercase tracking-widest">Dark Web Intelligence</span>
+            <p class="text-[11px] text-text-muted mt-0.5">De-Anonymization Platform</p>
         </div>
+        
         <!-- Navigation -->
-        <nav class="flex-1 overflow-y-auto px-3 py-2" id="sidebar-nav">
+        <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-0.5" id="sidebar-nav">
             <!-- Populated by app.js -->
         </nav>
-        <!-- Sidebar Footer -->
+        
+        <!-- Sidebar Footer Status Indicator (Cleaned - No dummy settings) -->
         <div class="p-3 border-t border-border-color flex-shrink-0">
-            <a href="#" class="flex items-center text-gray-400 hover:text-primary transition-colors text-sm px-3 py-2 rounded-lg hover:bg-gray-50">
-                <i class="fa-solid fa-gear w-5 text-center mr-3 text-[13px]"></i>
-                <span>Settings</span>
-            </a>
+            <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-surface-secondary text-xs text-text-muted">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-medium text-[11px]">Engine Active</span>
+                </div>
+                <span class="font-mono text-[10px] opacity-75">v1.2.0</span>
+            </div>
         </div>
     </aside>
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col h-full overflow-hidden min-w-0">
-        <!-- Top Header Bar -->
-        <header class="h-16 bg-surface border-b border-border-color flex items-center justify-between px-6 shadow-sm z-10 flex-shrink-0">
+        <!-- Top Header Bar (Cleaned - No dummy analyst profile or help button) -->
+        <header class="h-16 bg-surface border-b border-border-color flex items-center justify-between px-6 shadow-xs z-10 flex-shrink-0 transition-colors duration-200">
             <div class="flex items-center min-w-0">
-                <button class="text-gray-400 hover:text-gray-700 mr-4 lg:hidden" id="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('hidden')">
+                <button class="text-text-muted hover:text-text-main mr-4 lg:hidden" id="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('hidden')">
                     <i class="fa-solid fa-bars text-lg"></i>
                 </button>
                 <div class="min-w-0">
-                    <h2 class="text-lg font-semibold text-gray-800 truncate" id="current-page-title">Dashboard</h2>
-                    <span class="text-xs text-text-muted" id="current-page-subtitle">Welcome back, Security Analyst</span>
+                    <h2 class="text-base font-semibold text-text-main truncate" id="current-page-title">Dashboard</h2>
+                    <span class="text-xs text-text-muted truncate block" id="current-page-subtitle">Real-time threat telemetry & actor attribution</span>
                 </div>
             </div>
             
-            <div class="flex items-center space-x-3 flex-shrink-0">
-                <!-- Search -->
-                <div class="relative hidden md:block">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-search text-gray-400 text-sm"></i>
-                    </div>
-                    <input type="text" class="block w-56 lg:w-72 pl-9 pr-16 py-2 border border-border-color rounded-full text-sm placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors bg-gray-50/50" placeholder="Search services, personas, wallets...">
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                        <span class="text-[10px] text-gray-400 border border-gray-200 rounded px-1.5 py-0.5 bg-white font-mono">Ctrl+K</span>
-                    </div>
+            <div class="flex items-center space-x-2.5 flex-shrink-0">
+                <!-- Search Button / Quick Search Bar -->
+                <div class="relative hidden sm:block">
+                    <button id="search-trigger-btn" class="flex items-center justify-between w-52 md:w-64 px-3 py-1.5 border border-border-color rounded-lg text-xs text-text-muted bg-surface-secondary hover:border-primary/50 transition-all duration-150 cursor-pointer">
+                        <span class="flex items-center gap-2 truncate">
+                            <i class="fa-solid fa-search text-[11px] text-text-muted"></i>
+                            <span class="truncate">Search intel, IPs, onions...</span>
+                        </span>
+                        <kbd class="font-mono text-[10px] px-1.5 py-0.5 rounded border border-border-color bg-surface text-text-muted">Ctrl K</kbd>
+                    </button>
                 </div>
+
+                <!-- Theme Toggle Button (Light/Dark Mode) -->
+                <button id="theme-toggle" class="w-9 h-9 rounded-lg border border-border-color text-text-muted hover:text-text-main hover:bg-surface-secondary flex items-center justify-center transition-all duration-200 cursor-pointer" title="Toggle Light / Dark Mode">
+                    <i class="fa-solid fa-moon text-xs dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-xs hidden dark:block text-amber-400"></i>
+                </button>
                 
-                <!-- Notifications -->
-                <button class="relative text-gray-400 hover:text-gray-700 transition-colors p-2 rounded-lg hover:bg-gray-50">
-                    <i class="fa-regular fa-bell text-lg"></i>
-                    <span class="absolute top-1 right-1 flex h-4 w-4">
+                <!-- Alerts / Notifications -->
+                <button onclick="navigateTo('alerts')" class="relative text-text-muted hover:text-text-main transition-colors p-2 rounded-lg hover:bg-surface-secondary w-9 h-9 flex items-center justify-center border border-border-color cursor-pointer" title="Alerts">
+                    <i class="fa-regular fa-bell text-sm"></i>
+                    <span class="absolute top-1.5 right-1.5 flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-4 w-4 bg-danger text-[9px] text-white items-center justify-center font-bold border-2 border-surface">3</span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-danger"></span>
                     </span>
                 </button>
-                
-                <!-- Help -->
-                <button class="text-gray-400 hover:text-gray-700 transition-colors p-2 rounded-lg hover:bg-gray-50 hidden lg:block">
-                    <i class="fa-regular fa-circle-question text-lg"></i>
-                </button>
-                
-                <!-- User Avatar -->
-                <div class="flex items-center space-x-2 border-l border-border-color pl-3 ml-1">
-                    <div class="w-8 h-8 rounded-full bg-primary-light text-primary flex items-center justify-center font-bold text-xs">
-                        SA
-                    </div>
-                    <div class="hidden lg:block">
-                        <div class="text-sm font-medium text-gray-700 leading-tight">Analyst</div>
-                        <div class="text-[10px] text-gray-400 leading-tight">Security Team</div>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 cursor-pointer hidden lg:block"></i>
-                </div>
             </div>
         </header>
 
         <!-- Main Scrollable Content Area -->
-        <main class="flex-1 overflow-y-auto bg-background p-6" id="main-content">
+        <main class="flex-1 overflow-y-auto bg-background p-4 sm:p-6 transition-colors duration-200" id="main-content">
             <!-- Dynamic Content Rendered Here by app.js -->
         </main>
+    </div>
+
+    <!-- Quick Search Modal (Command Palette) -->
+    <div id="search-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-start justify-center pt-20 px-4 hidden">
+        <div class="bg-surface border border-border-color rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div class="p-3 border-b border-border-color flex items-center gap-3">
+                <i class="fa-solid fa-search text-text-muted text-sm pl-2"></i>
+                <input type="text" id="modal-search-input" class="w-full bg-transparent text-text-main placeholder-text-muted text-sm focus:outline-none" placeholder="Search threat actors, services, IOCs, CVEs...">
+                <kbd id="modal-close-btn" class="font-mono text-[10px] px-1.5 py-0.5 rounded border border-border-color bg-surface-secondary text-text-muted cursor-pointer">ESC</kbd>
+            </div>
+            <div id="modal-search-results" class="max-h-72 overflow-y-auto p-2 divide-y divide-border-color/50 text-xs">
+                <!-- Search results injected dynamically -->
+            </div>
+            <div class="p-2.5 bg-surface-secondary border-t border-border-color flex justify-between items-center text-[11px] text-text-muted">
+                <span>Quick search across all threat intelligence</span>
+                <span>Press <kbd class="font-mono px-1 rounded bg-surface border border-border-color">ESC</kbd> to close</span>
+            </div>
+        </div>
     </div>
 
     <!-- View Scripts (order matters — loaded before app.js wires them) -->
