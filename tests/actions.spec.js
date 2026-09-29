@@ -70,6 +70,23 @@ test('Reports exports actual data and prints the current brief',async({page})=>{
     await expect(page.locator('#report-actions')).toBeHidden();
     await expect(page.locator('#report-preview')).toContainText('IntelBroker');
 });
+test('Reports allows selecting specific actors and downloads custom CSV and PDF',async({page})=>{
+    await start(page,'reports');
+    await expect(page.locator('#selected-count-badge')).toHaveText('5 of 5 selected');
+    await page.locator('#select-all-actors').click();
+    await expect(page.locator('#selected-count-badge')).toHaveText('0 of 5 selected');
+    await page.locator('tbody tr[data-actor-id="TA-8821"]').click();
+    await page.locator('tbody tr[data-actor-id="TA-4109"]').click();
+    await expect(page.locator('#selected-count-badge')).toHaveText('2 of 5 selected');
+    const csv = await downloaded(page, '#btn-download-csv');
+    expect(csv.text).toContain('"IntelBroker"');
+    expect(csv.text).toContain('"ShinyHunters"');
+    expect(csv.text).not.toContain('"LockBitSupp"');
+    const pdf = await downloaded(page, '#btn-download-pdf');
+    expect(pdf.text).toContain('%PDF-1.4');
+    expect(pdf.text).toContain('IntelBroker');
+    expect(pdf.text).toContain('ShinyHunters');
+});
 test('alerts open dossiers, acknowledge, dismiss and retain changes',async({page})=>{
     await start(page,'alerts');
     await expect(page.locator('.alert-card')).toHaveCount(10);
