@@ -86,6 +86,7 @@ function renderAlerts(container) {
         },
     ];
 
+    const state = window.andurilAlerts || (window.andurilAlerts = loadLocalState('anduril_alerts', {dismissed:[], acknowledged:[]}));
     const alerts = alertTemplates.map((tpl, idx) => {
         const actor = actors[idx % actors.length] || { primary_handle: 'UnknownActor', handles: [], crypto_wallets: [] };
         const service = infra[idx % Math.max(infra.length, 1)] || null;
@@ -96,10 +97,11 @@ function renderAlerts(container) {
             title: tpl.titleFn(actor, service),
             description: tpl.descFn(actor, service),
             persona: actor.primary_handle,
+            actorId: actor.id,
             status: tpl.status,
             agoLabel: tpl.agoLabel,
         };
-    });
+    }).filter(a => !state.dismissed.includes(a.id)).map(a => ({...a, status:state.acknowledged.includes(a.id) ? 'Acknowledged' : a.status}));
 
     // --------------- Counts ---------------
     const totalAlerts = alerts.length;
@@ -127,7 +129,7 @@ function renderAlerts(container) {
     // --------------- Build alert card HTML ---------------
     const buildAlertCard = (alert) => `
         <div class="alert-card bg-surface rounded-xl shadow-sm border border-border-color p-4 flex items-start gap-4 hover:shadow-md transition-shadow group"
-             data-severity="${alert.severity}" data-type="${alert.type}" data-status="${alert.status}">
+             data-alert-id="${alert.id}" data-actor-id="${alert.actorId}" data-severity="${alert.severity}" data-type="${alert.type}" data-status="${alert.status}">
             <!-- Severity dot -->
             <div class="flex-shrink-0 pt-1">
                 <div class="w-3 h-3 rounded-full ${sevDot(alert.severity)} ring-4 ${alert.severity === 'HIGH' ? 'ring-red-100' : alert.severity === 'MEDIUM' ? 'ring-amber-100' : 'ring-green-100'}"></div>
@@ -153,7 +155,7 @@ function renderAlerts(container) {
             <!-- Right: Status + Actions -->
             <div class="flex flex-col items-end gap-2 flex-shrink-0">
                 ${statusBadge(alert.status)}
-                <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="flex gap-1">
                     <button class="text-xs text-primary hover:text-primary-dark hover:bg-primary-light px-2 py-1 rounded transition-colors font-medium" title="View details">View</button>
                     <button class="text-xs text-gray-400 hover:text-gray-600 hover:bg-gray-100 px-2 py-1 rounded transition-colors font-medium" title="Dismiss alert">Dismiss</button>
                 </div>
@@ -169,7 +171,7 @@ function renderAlerts(container) {
                 <h2 class="text-2xl font-bold text-gray-800 flex items-center">
                     <i class="fa-solid fa-bell mr-3 text-primary"></i> Alerts
                 </h2>
-                <p class="text-sm text-text-muted mt-1">Real-time notifications from threat intelligence pipelines and automated scanners.</p>
+                <p class="text-sm text-text-muted mt-1"></p>
             </div>
             <button id="mark-all-read-btn" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md font-medium text-sm transition-colors shadow-sm">
                 <i class="fa-solid fa-check-double mr-2"></i>Mark All Read
@@ -241,15 +243,7 @@ function renderAlerts(container) {
                         <option value="Scan">Scan</option>
                     </select>
                 </div>
-                <div class="flex items-center text-sm">
-                    <span class="text-gray-500 mr-2">Date:</span>
-                    <select id="alert-date-filter" class="border border-border-color rounded-md px-2 py-1.5 focus:outline-none focus:border-primary text-gray-700 text-sm">
-                        <option>Last 24 hours</option>
-                        <option>Last 7 days</option>
-                        <option>Last 30 days</option>
-                        <option>All time</option>
-                    </select>
-                </div>
+
             </div>
         </div>
 
@@ -268,6 +262,7 @@ function renderAlerts(container) {
 
     // --------------- Interactive behaviour ---------------
     setTimeout(() => {
+        if (!container.isConnected) return;
         const searchInput    = document.getElementById('alert-search');
         const sevFilter      = document.getElementById('alert-severity-filter');
         const typeFilter     = document.getElementById('alert-type-filter');
@@ -306,44 +301,25 @@ function renderAlerts(container) {
         if (sevFilter)   sevFilter.addEventListener('change', applyFilters);
         if (typeFilter)  typeFilter.addEventListener('change', applyFilters);
 
-        // Mark All Read — swap all "New" badges to "Acknowledged"
         if (markAllBtn) {
+            markAllBtn.disabled = !alerts.some(a=>a.status==='New');
             markAllBtn.addEventListener('click', () => {
-                const cards = alertsList ? alertsList.querySelectorAll('.alert-card') : [];
-                cards.forEach(card => {
-                    const badge = card.querySelector('.badge-high');
-                    if (badge && badge.textContent.trim() === 'New') {
-                        badge.className = 'badge badge-medium';
-                        badge.textContent = 'Acknowledged';
-                        card.dataset.status = 'Acknowledged';
-                    }
-                });
-                markAllBtn.innerHTML = '<i class="fa-solid fa-check-double mr-2"></i>All Marked Read';
-                markAllBtn.classList.add('opacity-60', 'pointer-events-none');
+                state.acknowledged = [...new Set([...state.acknowledged,...alerts.filter(a=>a.status==='New').map(a=>a.id)])];
+                saveLocalState('anduril_alerts',state);
+                renderAlerts(container);
             });
         }
-
-        // Dismiss buttons
-        if (alertsList) {
-            alertsList.addEventListener('click', (e) => {
-                const dismissBtn = e.target.closest('button[title="Dismiss alert"]');
-                if (dismissBtn) {
-                    const card = dismissBtn.closest('.alert-card');
-                    if (card) {
-                        card.style.transition = 'opacity 0.3s, transform 0.3s';
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateX(20px)';
-                        setTimeout(() => {
-                            card.remove();
-                            // Check if list is now empty
-                            const remaining = alertsList.querySelectorAll('.alert-card:not(.hidden)');
-                            if (remaining.length === 0 && emptyState) {
-                                emptyState.classList.remove('hidden');
-                            }
-                        }, 300);
-                    }
-                }
-            });
-        }
+        if (alertsList) alertsList.addEventListener('click', e => {
+            const button=e.target.closest('button');
+            if (!button) return;
+            const card=button.closest('.alert-card');
+            if (button.title === 'View details') navigateTo('personas',{actor:card.dataset.actorId});
+            if (button.title === 'Dismiss alert') {
+                state.dismissed.push(card.dataset.alertId);
+                saveLocalState('anduril_alerts',state);
+                renderAlerts(container);
+            }
+        });
+        applyFilters();
     }, 50);
 }

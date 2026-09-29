@@ -1,12 +1,12 @@
 /**
- * Infrastructure Analysis View
+ * Infrastructure View
  * Renders hidden service scanning, de-anonymization results, and infrastructure overview.
  */
 function renderInfrastructure(container) {
   const infra = (appState.data && appState.data.infrastructure) || [];
 
   const totalNodes = infra.length;
-  const deanonymized = infra.filter(s => s.deanonymized || s.origin_ip || (s.attribution && s.attribution.ip)).length;
+  const deanonymized = infra.filter(s => s.origin_attribution?.clearnet_ip || s.deanonymized || s.origin_ip || (s.attribution && s.attribution.ip)).length;
   const activeScans = infra.filter(s => s.status === 'scanning' || s.status === 'active').length;
   const misconfigs = infra.filter(s =>
     (s.vulnerabilities && s.vulnerabilities.length > 0) ||
@@ -33,9 +33,9 @@ function renderInfrastructure(container) {
           <span class="flex items-center justify-center w-10 h-10 rounded-lg bg-teal-50 text-teal-600">
             <i class="fa-solid fa-server text-lg"></i>
           </span>
-          Infrastructure Analysis
+          Infrastructure
         </h1>
-        <p class="text-gray-500 mt-1 ml-13">Scan, fingerprint, and de-anonymize hidden services across the dark web.</p>
+
       </div>
 
       <!-- Summary Cards -->
@@ -50,7 +50,7 @@ function renderInfrastructure(container) {
               <i class="fa-solid fa-network-wired text-blue-500"></i>
             </div>
           </div>
-          <p class="text-xs text-gray-400 mt-2">Hidden services tracked</p>
+
         </div>
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between">
@@ -62,7 +62,7 @@ function renderInfrastructure(container) {
               <i class="fa-solid fa-crosshairs text-red-500"></i>
             </div>
           </div>
-          <p class="text-xs text-gray-400 mt-2">Origin servers identified</p>
+
         </div>
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between">
@@ -74,7 +74,7 @@ function renderInfrastructure(container) {
               <i class="fa-solid fa-radar text-teal-500"></i>
             </div>
           </div>
-          <p class="text-xs text-gray-400 mt-2">Currently in progress</p>
+
         </div>
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between">
@@ -86,7 +86,7 @@ function renderInfrastructure(container) {
               <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
             </div>
           </div>
-          <p class="text-xs text-gray-400 mt-2">Exposed configurations</p>
+
         </div>
       </div>
 
@@ -229,6 +229,8 @@ function renderInfrastructure(container) {
   const resultsSection = document.getElementById('infra-results');
   const resultsContent = document.getElementById('infra-results-content');
 
+  if (appState.selection?.scanner) input.focus();
+
   // Quick-target chip clicks
   document.querySelectorAll('.infra-chip').forEach(chip => {
     chip.addEventListener('click', () => {
@@ -249,6 +251,7 @@ function renderInfrastructure(container) {
   }
 
   function setButtonsDisabled(disabled) {
+    if (!container.isConnected) return;
     const btnPassive = document.getElementById('infra-btn-passive');
     const btnActive = document.getElementById('infra-btn-active');
     if (disabled) {
@@ -280,27 +283,7 @@ function renderInfrastructure(container) {
 
     termLog(`$ Initiating ${label} scan...`, 'text-teal-400');
     termLog(`  Target: ${target}`, 'text-gray-400');
-    termLog(`  Endpoint: ${endpoint}`, 'text-gray-500');
     termLog('', 'text-gray-500');
-
-    // Simulated progress lines
-    const steps = [
-      { msg: '[+] Resolving .onion address via Tor circuit...', delay: 400 },
-      { msg: '[+] Establishing connection to hidden service...', delay: 600 },
-      { msg: '[+] Enumerating HTTP headers and TLS certificate...', delay: 500 },
-      { msg: '[+] Fingerprinting server software...', delay: 400 },
-      { msg: type === 'active' ? '[+] Running active probes (port scan, traceroute)...' : '[+] Querying passive intelligence sources...', delay: 800 },
-      { msg: '[+] Cross-referencing with known infrastructure...', delay: 500 },
-      { msg: '[+] Analyzing potential misconfigurations...', delay: 400 },
-    ];
-
-    for (const step of steps) {
-      await new Promise(r => setTimeout(r, step.delay));
-      termLog(step.msg, 'text-green-400');
-    }
-
-    termLog('', 'text-gray-500');
-    termLog('[*] Sending scan request to backend...', 'text-amber-400');
 
     try {
       const resp = await fetch(endpoint, {
@@ -312,6 +295,7 @@ function renderInfrastructure(container) {
       if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
 
       const data = await resp.json();
+      if (!container.isConnected) return;
 
       termLog('[✓] Scan complete. Processing results...', 'text-teal-400');
       termLog('', 'text-gray-500');
@@ -329,16 +313,16 @@ function renderInfrastructure(container) {
   function displayResults(data, target, scanType) {
     resultsSection.classList.remove('hidden');
 
-    const attribution = data.attribution || data.origin || {};
-    const ip = attribution.ip || data.origin_ip || data.ip || '—';
+    const attribution = data.origin_attribution || data.attribution || data.origin || {};
+    const ip = attribution.clearnet_ip || attribution.ip || data.origin_ip || data.ip || '—';
     const country = attribution.country || data.country || '—';
     const isp = attribution.isp || data.isp || attribution.hosting || '—';
-    const confidence = attribution.confidence || data.confidence || 'N/A';
+    const confidence = attribution.confidence_score ?? attribution.confidence ?? data.confidence ?? 'N/A';
     const confNum = typeof confidence === 'number' ? confidence : parseInt(confidence) || 0;
     const confColor = confNum >= 80 ? 'text-red-600' : confNum >= 50 ? 'text-amber-600' : 'text-gray-600';
 
-    const vulns = data.vulnerabilities || data.findings || [];
-    const evidence = data.evidence || data.technical_details || data.details || {};
+    const vulns = data.misconfigurations || data.vulns || data.vulnerabilities || data.findings || [];
+    const evidence = data.evidence || data.origin_attribution?.matching_indicators || data.technical_details || data.details || data.vulns?.map(v => v.evidence) || {};
 
     resultsContent.innerHTML = `
       <!-- Attribution Card -->
@@ -383,7 +367,7 @@ function renderInfrastructure(container) {
         ` : `
           <div class="space-y-2 max-h-48 overflow-y-auto">
             ${vulns.map(v => {
-              const name = typeof v === 'string' ? v : (v.name || v.title || v.id || 'Unknown');
+              const name = typeof v === 'string' ? v : (v.name || v.title || v.type || v.id || 'Finding');
               const severity = typeof v === 'object' ? (v.severity || v.risk || 'info') : 'info';
               const sevColors = {
                 'critical': 'bg-red-100 text-red-700 border-red-200',

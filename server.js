@@ -463,9 +463,16 @@ app.get('/api/audit/dorks', (req, res) => {
 });
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log('De-Anonymization Platform Backend running on http://localhost:' + PORT);
+  const host = '0.0.0.0';
+  app.listen(3000, host, () => {
+    console.log('Backend running on http://' + host + ':3000');
   });
+  try {
+    const s2 = require('http').createServer(app);
+    s2.listen(3100, host, () => {
+      console.log('Backend also listening on http://' + host + ':3100');
+    });
+  } catch (err) {}
 }
 
 module.exports = app;

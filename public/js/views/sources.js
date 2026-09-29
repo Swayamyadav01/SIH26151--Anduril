@@ -132,7 +132,7 @@ function renderSources(container) {
           </span>
           Intelligence Sources
         </h1>
-        <p class="text-gray-500 mt-1 ml-13">Data feeds and collection sources powering the threat intelligence platform.</p>
+
       </div>
 
       <!-- Status Summary -->

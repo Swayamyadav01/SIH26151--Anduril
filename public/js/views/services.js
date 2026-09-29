@@ -127,7 +127,7 @@ function renderServices(container) {
       /* Close button */
       '<div class="flex items-center justify-between mb-5">' +
         '<h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-server text-teal-500 mr-2"></i>' + escapeHtml(svc.service_name) + '</h3>' +
-        '<button id="svc-detail-close" class="text-gray-400 hover:text-gray-600 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>' +
+        '<button id="svc-detail-close" aria-label="Close service details" class="text-gray-400 hover:text-gray-600 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>' +
       '</div>' +
 
       /* Service details grid */
@@ -167,20 +167,20 @@ function renderServices(container) {
       /* ── Header ───────────────────────────────────────── */
       '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">' +
         '<div>' +
-          '<h1 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-globe text-teal-500 mr-2"></i>Dark Web Services</h1>' +
-          '<p class="text-sm text-gray-500 mt-1">Monitor hidden services, detect misconfigurations, and track origin attribution across the Tor network.</p>' +
+          '<h1 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-globe text-teal-500 mr-2"></i>Services</h1>' +
+          '' +
         '</div>' +
         '<button id="svc-scan-btn" class="bg-primary hover:bg-teal-600 text-white font-semibold text-sm px-5 py-2.5 rounded-lg shadow-sm transition-colors whitespace-nowrap">' +
-          '<i class="fa-solid fa-satellite-dish mr-2"></i>Scan New Service' +
+          '<i class="fa-solid fa-satellite-dish mr-2"></i>Open scanner' +
         '</button>' +
       '</div>' +
 
       /* ── Summary stat cards ───────────────────────────── */
       '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">' +
-        statCard('fa-server',              'Total Services',          totalServices,   'text-teal-500',   'bg-teal-50') +
-        statCard('fa-signal',              'Active Services',         activeServices,  'text-green-500',  'bg-green-50') +
-        statCard('fa-crosshairs',          'Compromised',             compromised,     'text-red-500',    'bg-red-50') +
-        statCard('fa-triangle-exclamation', 'Misconfigurations Found', totalMisconfigs, 'text-amber-500',  'bg-amber-50') +
+        serviceStatCard('fa-server',              'Total Services',          totalServices,   'text-teal-500',   'bg-teal-50') +
+        serviceStatCard('fa-signal',              'Active Services',         activeServices,  'text-green-500',  'bg-green-50') +
+        serviceStatCard('fa-crosshairs',          'Compromised',             compromised,     'text-red-500',    'bg-red-50') +
+        serviceStatCard('fa-triangle-exclamation', 'Misconfigurations Found', totalMisconfigs, 'text-amber-500',  'bg-amber-50') +
       '</div>' +
 
       /* ── Search / filter bar ──────────────────────────── */
@@ -236,7 +236,7 @@ function renderServices(container) {
         (svc.onion_address  || '').toLowerCase().indexOf(query) !== -1 ||
         (origin.clearnet_ip || '').toLowerCase().indexOf(query) !== -1;
 
-      var matchesStatus = !status || (svc.status || '').toUpperCase() === status;
+      var matchesStatus = !status || (status === 'INACTIVE' ? (svc.status || '').toUpperCase().startsWith('INACTIVE') : (svc.status || '').toUpperCase() === status);
 
       return matchesSearch && matchesStatus;
     });
@@ -273,48 +273,17 @@ function renderServices(container) {
   if (searchInput)  searchInput.addEventListener('input', applyFilters);
   if (statusFilter) statusFilter.addEventListener('change', applyFilters);
 
-  /* Scan button */
-  var scanBtn = document.getElementById('svc-scan-btn');
-  if (scanBtn) {
-    scanBtn.addEventListener('click', function () {
-      var addr = prompt('Enter .onion address to scan:');
-      if (!addr || !addr.trim()) return;
-
-      scanBtn.disabled = true;
-      scanBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Scanning…';
-
-      fetch('/api/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ onion_address: addr.trim() })
-      })
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
-        scanBtn.disabled = false;
-        scanBtn.innerHTML = '<i class="fa-solid fa-satellite-dish mr-2"></i>Scan New Service';
-        alert('Scan initiated for ' + addr.trim() + '. Results will appear shortly.');
-      })
-      .catch(function (err) {
-        scanBtn.disabled = false;
-        scanBtn.innerHTML = '<i class="fa-solid fa-satellite-dish mr-2"></i>Scan New Service';
-        alert('Scan failed: ' + err.message);
-      });
-    });
-  }
+  container.querySelector('#svc-scan-btn').onclick = () => navigateTo('infrastructure', {scanner:true});
 
   /* Initial view button wiring */
   attachViewHandlers();
+  if (appState.selection?.service) {
+    const idx = filteredServices.findIndex(s => s.onion_address === appState.selection.service);
+    container.querySelector(`.svc-view-btn[data-idx="${idx}"]`)?.click();
+  }
 }
 
 /* ── Stat card helper (module-level so it stays lean) ──── */
-function statCard(icon, label, value, iconColor, bgColor) {
-  return '<div class="bg-surface rounded-xl shadow-sm border border-border-color p-5 flex items-center gap-4">' +
-    '<div class="w-12 h-12 rounded-lg flex items-center justify-center ' + bgColor + '">' +
-      '<i class="fa-solid ' + icon + ' text-xl ' + iconColor + '"></i>' +
-    '</div>' +
-    '<div>' +
-      '<p class="text-2xl font-bold text-gray-800">' + value + '</p>' +
-      '<p class="text-xs text-gray-500 mt-0.5">' + label + '</p>' +
-    '</div>' +
-  '</div>';
+function serviceStatCard(icon, label, value) {
+  return statCard('fa-solid ' + icon, label, value, 'Indexed snapshot', 'text-text-muted');
 }

@@ -3,4 +3,6 @@ node_modules
 *.log
 *.bat
 backend/modules/passive_audit/__pycache__
-EOF
+tests
+test-results
+playwright.config.js

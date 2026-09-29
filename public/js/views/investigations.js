@@ -23,8 +23,8 @@ function renderInvestigations(container) {
         const updated = new Date(Date.now() - updatedAgo * 86400000);
         return {
             id: `INV-${String(i + 1).padStart(3, '0')}`,
-            title: `${actor.name || actor.handle || 'Unknown'} ${tpl.title}`,
-            actorName: actor.name || actor.handle || 'Unknown',
+            title: `${actor.primary_handle || actor.name || actor.handle || 'Unknown'} ${tpl.title}`,
+            actorName: actor.primary_handle || actor.name || actor.handle || 'Unknown',
             actorId: actor.id,
             risk: tpl.risk,
             confidence: tpl.confidence,
@@ -50,11 +50,8 @@ function renderInvestigations(container) {
                 <h2 class="text-2xl font-bold text-gray-800 flex items-center">
                     <i class="fa-solid fa-magnifying-glass-chart mr-3 text-primary"></i> Investigations
                 </h2>
-                <p class="text-sm text-text-muted mt-1">Track, correlate, and manage active threat-actor investigations.</p>
+
             </div>
-            <button id="btnNewInvestigation" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md font-medium text-sm transition-colors shadow-sm">
-                <i class="fa-solid fa-plus mr-2"></i>New Investigation
-            </button>
         </div>
 
         <!-- Summary Cards -->
@@ -204,7 +201,7 @@ function renderInvestigations(container) {
                 <td class="px-4 py-3 font-mono text-xs text-primary font-semibold">${inv.id}</td>
                 <td class="px-4 py-3 font-medium text-gray-800">${inv.title}</td>
                 <td class="px-4 py-3">
-                    <span class="inline-flex items-center gap-1.5 text-primary cursor-pointer hover:underline" data-actor-id="${inv.actorId}">
+                    <span class="inline-flex items-center gap-1.5 text-text-main" data-actor-id="${inv.actorId}">
                         <i class="fa-solid fa-user-secret text-xs"></i>${inv.actorName}
                     </span>
                 </td>
@@ -215,7 +212,6 @@ function renderInvestigations(container) {
                 <td class="px-4 py-3 text-xs text-gray-500">${inv.updated}</td>
                 <td class="px-4 py-3 text-right">
                     <button class="inv-view text-primary hover:text-primary-dark text-xs font-medium mr-2" data-inv-id="${inv.id}"><i class="fa-solid fa-eye mr-1"></i>View</button>
-                    <button class="inv-archive text-gray-400 hover:text-gray-600 text-xs font-medium" data-inv-id="${inv.id}"><i class="fa-solid fa-box-archive mr-1"></i>Archive</button>
                 </td>
             </tr>
         `).join('');
@@ -224,15 +220,7 @@ function renderInvestigations(container) {
         tbody.querySelectorAll('.inv-view').forEach(btn => {
             btn.addEventListener('click', () => showDetail(btn.dataset.invId));
         });
-        // Archive buttons
-        tbody.querySelectorAll('.inv-archive').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const row = btn.closest('tr');
-                if (row) row.style.opacity = '0.4';
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Archived';
-            });
-        });
+
     }
 
     // initial render
@@ -295,7 +283,7 @@ function renderInvestigations(container) {
                         <h3 class="text-lg font-semibold text-gray-800">${inv.title}</h3>
                         ${statusBadge(inv.status)}
                     </div>
-                    <button id="invDetailClose" class="text-gray-400 hover:text-gray-600 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    <button id="invDetailClose" aria-label="Close investigation" class="text-gray-400 hover:text-gray-600 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
@@ -322,12 +310,7 @@ function renderInvestigations(container) {
                                     <span class="font-bold text-gray-800">${inv.evidenceTypes.length}</span>
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-500 mt-4 leading-relaxed">
-                                Ongoing investigation into <strong>${inv.actorName}</strong>'s operational infrastructure and identity indicators.
-                                Current evidence supports a <strong>${inv.confidence}%</strong> confidence attribution based on
-                                ${inv.evidenceTypes.slice(0, 2).join(' and ').toLowerCase()} analysis.
-                                ${inv.status === 'Active' ? 'Active collection and analysis is in progress.' : inv.status === 'Pending Review' ? 'Awaiting senior analyst review before escalation.' : 'Investigation has been resolved and archived.'}
-                            </p>
+
                         </div>
 
                         <!-- Evidence List -->
@@ -446,16 +429,7 @@ function renderInvestigations(container) {
                                     </div>
                                 `).join('')}
                             </div>
-                            <div class="mt-4 p-3 rounded-lg bg-gray-50 border border-gray-100">
-                                <div class="text-xs font-semibold text-gray-600 mb-1"><i class="fa-solid fa-note-sticky mr-1 text-primary"></i>Analyst Note</div>
-                                <p class="text-xs text-gray-500 leading-relaxed">
-                                    ${inv.risk === 'High'
-                                        ? 'Recommend immediate escalation. Multiple high-confidence indicators converge on a single attribution hypothesis.'
-                                        : inv.risk === 'Medium'
-                                        ? 'Additional evidence collection recommended before escalation. Current indicators are suggestive but not conclusive.'
-                                        : 'Low-priority case. Evidence is circumstantial. Monitor for new developments before allocating resources.'}
-                                </p>
-                            </div>
+
                         </div>
                     </div>
                 </div>

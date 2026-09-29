@@ -17,15 +17,15 @@ function renderWatchlist(container) {
   // Pre-populate with actors on first load
   if (!wl.initialized) {
     const actors = (appState.data && appState.data.actors) || [];
-    wl.items = actors.slice(0, 4).map((a, i) => ({
+    wl.items = loadLocalState('anduril_watchlist', null) || actors.slice(0, 4).map((a, i) => ({
       id: a.id || `wl-${i}`,
-      name: a.name || a.alias || 'Unknown Actor',
+      name: a.primary_handle || a.name || a.alias || 'Unknown Actor',
       type: a.type || 'Threat Actor',
       threat_level: a.threat_level || a.risk_level || 'medium',
       description: a.description || a.bio || '',
       aliases: a.aliases || [],
-      added_at: new Date(Date.now() - Math.random() * 7 * 86400000).toISOString(),
-      alerts: Math.floor(Math.random() * 8),
+      added_at: new Date().toISOString(),
+      alerts: 0,
       status: ['active', 'dormant', 'active', 'active'][i] || 'active'
     }));
     wl.initialized = true;
@@ -46,7 +46,7 @@ function renderWatchlist(container) {
               </span>
               Watchlist
             </h1>
-            <p class="text-gray-500 mt-1 ml-13">Monitor threat actors and infrastructure of interest.</p>
+
           </div>
           <button
             id="wl-add-btn"
@@ -162,7 +162,7 @@ function renderWatchlist(container) {
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h3 class="text-sm font-semibold text-gray-800">${item.name}</h3>
+                    <h3 class="text-sm font-semibold text-gray-800">${escapeHTML(item.name)}</h3>
                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${tClass}">
                       ${(item.threat_level || 'medium').toUpperCase()}
                     </span>
@@ -171,8 +171,8 @@ function renderWatchlist(container) {
                       ${item.status || 'unknown'}
                     </span>
                   </div>
-                  <p class="text-xs text-gray-500 mt-0.5">${item.type}</p>
-                  ${item.description ? `<p class="text-xs text-gray-600 mt-2 leading-relaxed">${item.description.length > 150 ? item.description.substring(0, 147) + '...' : item.description}</p>` : ''}
+                  <p class="text-xs text-gray-500 mt-0.5">${escapeHTML(item.type)}</p>
+                  ${item.description ? `<p class="text-xs text-gray-600 mt-2 leading-relaxed">${escapeHTML(item.description.length > 150 ? item.description.substring(0, 147) + '...' : item.description)}</p>` : ''}
                   <div class="flex items-center gap-4 mt-3 text-xs text-gray-400">
                     ${addedDate ? `<span><i class="fa-regular fa-calendar mr-1"></i>Added ${addedDate}</span>` : ''}
                     ${item.alerts > 0 ? `<span class="text-red-500 font-medium"><i class="fa-solid fa-bell mr-1"></i>${item.alerts} alert${item.alerts !== 1 ? 's' : ''}</span>` : '<span class="text-green-500"><i class="fa-solid fa-check-circle mr-1"></i>No alerts</span>'}
@@ -207,7 +207,12 @@ function renderWatchlist(container) {
     if (saveBtn) {
       saveBtn.addEventListener('click', () => {
         const name = document.getElementById('wl-name').value.trim();
-        if (!name) return;
+        if (!name) {
+          const field = document.getElementById('wl-name');
+          field.setCustomValidity('Enter an entity name.'); field.reportValidity();
+          field.oninput = () => field.setCustomValidity('');
+          return;
+        }
 
         wl.items.push({
           id: 'wl-' + Date.now(),
@@ -221,6 +226,7 @@ function renderWatchlist(container) {
           status: 'active'
         });
 
+        saveLocalState('anduril_watchlist', wl.items);
         render();
       });
     }
@@ -230,6 +236,7 @@ function renderWatchlist(container) {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.dataset.index, 10);
         wl.items.splice(idx, 1);
+        saveLocalState('anduril_watchlist', wl.items);
         render();
       });
     });

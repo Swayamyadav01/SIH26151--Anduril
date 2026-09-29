@@ -1,4 +1,4 @@
-// DeProxy Application Core & Navigation Controller
+// Anduril Application Core & Navigation Controller
 const appState = {
     currentView: 'dashboard',
     theme: 'light',
@@ -17,7 +17,7 @@ const routes = {
     'infrastructure':  { title: 'Infrastructure',  subtitle: 'Origin server de-anonymization & probes',       icon: 'fa-solid fa-network-wired', render: renderInfrastructure },
     'graph':           { title: 'Graph',           subtitle: 'Entity relationship link graph',                icon: 'fa-solid fa-diagram-project', render: renderGraph },
     'investigations':  { title: 'Investigations',  subtitle: 'Active forensics & case files',                 icon: 'fa-solid fa-magnifying-glass', render: renderInvestigations },
-    'alerts':          { title: 'Alerts',          subtitle: 'Real-time IOC notifications & breaches',        icon: 'fa-regular fa-bell',     render: renderAlerts, badge: 3 },
+    'alerts':          { title: 'Alerts',          subtitle: 'Real-time IOC notifications & breaches',        icon: 'fa-regular fa-bell',     render: renderAlerts },
     'stylometry':      { title: 'AI Stylometry',   subtitle: 'Linguistic actor attribution & NLP markers',    icon: 'fa-solid fa-brain',      render: renderStylometry },
     'reports':         { title: 'Reports',         subtitle: 'Forensic dossier generation & export',          icon: 'fa-regular fa-file-lines', render: renderReports },
     'sources':         { title: 'Sources',         subtitle: 'Ingestion pipeline & monitored crawlers',       icon: 'fa-solid fa-database',   render: renderSources },
@@ -28,23 +28,13 @@ function initApp() {
     initTheme();
     initSearchModal();
     renderSidebar();
-    navigateTo('dashboard');
+    initMobileNavigation();
     fetchInitialData();
 }
 
 // ===== THEME MANAGER (Light / Dark Mode) =====
 function initTheme() {
-    const saved = localStorage.getItem('deproxy_theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (saved === 'dark' || (!saved && prefersDark)) {
-        appState.theme = 'dark';
-        document.documentElement.classList.add('dark');
-    } else {
-        appState.theme = 'light';
-        document.documentElement.classList.remove('dark');
-    }
-
+    appState.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
     const toggleBtn = document.getElementById('theme-toggle');
     if (toggleBtn) {
         toggleBtn.addEventListener('click', toggleTheme);
@@ -52,23 +42,38 @@ function initTheme() {
 }
 
 function toggleTheme() {
-    if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        appState.theme = 'light';
-        localStorage.setItem('deproxy_theme', 'light');
-    } else {
-        document.documentElement.classList.add('dark');
-        appState.theme = 'dark';
-        localStorage.setItem('deproxy_theme', 'dark');
-    }
-
-    // Refresh charts on active view if on dashboard
+    const dark = document.documentElement.classList.toggle('dark');
+    appState.theme = dark ? 'dark' : 'light';
+    try { localStorage.setItem('anduril_theme', appState.theme); } catch (_) {}
+    document.getElementById('theme-toggle').setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
     if (appState.currentView === 'dashboard') {
-        const actors = appState.data.actors || [];
         renderActivityChart();
-        renderCategoryChart(actors);
-        renderConfidenceChart(actors);
+        renderCategoryChart(appState.data.actors);
+        renderConfidenceChart(appState.data.actors);
     }
+    if (appState.currentView === 'graph') updateGraphTheme();
+}
+
+function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+}
+const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+function initMobileNavigation() {
+    const toggle = document.getElementById('mobile-menu-btn');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const close = () => {
+        document.body.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        backdrop.hidden = true;
+    };
+    toggle.onclick = () => {
+        const open = document.body.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', String(open));
+        backdrop.hidden = !open;
+    };
+    backdrop.onclick = close;
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    window.closeMobileNavigation = close;
 }
 
 // ===== SIDEBAR NAVIGATION =====
@@ -81,6 +86,7 @@ function renderSidebar() {
         const route = routes[key];
         const a = document.createElement('a');
         a.href = `#${key}`;
+        if (appState.currentView === key) a.setAttribute('aria-current', 'page');
         a.className = `nav-item flex items-center justify-between px-3 py-2 rounded-lg text-xs cursor-pointer transition-all duration-150 ${appState.currentView === key ? 'active' : ''}`;
         a.onclick = (e) => {
             e.preventDefault();
@@ -101,139 +107,115 @@ function renderSidebar() {
     });
 }
 
-function navigateTo(view) {
+let navigationVersion = 0;
+function navigateTo(view, selection = null) {
     if (!routes[view]) return;
-    
+    navigationVersion++;
+    destroyDashboard();
+    destroyGraph();
+    if (typeof Chart !== 'undefined') Object.values(Chart.instances).forEach(chart => chart.destroy());
     appState.currentView = view;
-    
-    // Update header
-    const titleEl = document.getElementById('current-page-title');
-    const subtitleEl = document.getElementById('current-page-subtitle');
-    if (titleEl) titleEl.innerText = routes[view].title;
-    if (subtitleEl) subtitleEl.innerText = routes[view].subtitle || '';
-    
-    // Update sidebar active state
+    appState.selection = selection;
+    closeMobileNavigation?.();
+    document.getElementById('current-page-title').textContent = routes[view].title;
     renderSidebar();
-    
-    // Render content with smooth transition
-    const mainContent = document.getElementById('main-content');
-    mainContent.innerHTML = `
-        <div class="flex justify-center items-center h-48">
-            <div class="flex flex-col items-center gap-2">
-                <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
-                <span class="text-xs text-text-muted">Loading ${routes[view].title}...</span>
-            </div>
-        </div>`;
-    
-    setTimeout(() => {
-        mainContent.innerHTML = '<div id="view-container" class="fade-in"></div>';
-        try {
-            routes[view].render(document.getElementById('view-container'));
-        } catch (err) {
-            console.error(`Error rendering ${view}:`, err);
-            document.getElementById('view-container').innerHTML = `
-                <div class="flex flex-col items-center justify-center h-48 border border-dashed border-red-200 dark:border-red-900/40 rounded-xl bg-red-50/50 dark:bg-red-950/20 mt-8">
-                    <i class="fa-solid fa-triangle-exclamation text-2xl text-red-400 mb-2"></i>
-                    <h3 class="text-sm font-semibold text-red-600 dark:text-red-400">View Rendering Error</h3>
-                    <p class="text-xs text-red-500 mt-1">${err.message}</p>
-                </div>`;
-        }
-    }, 80);
+    const main = document.getElementById('main-content');
+    main.scrollTop = 0;
+    main.innerHTML = '<div id="view-container" class="fade-in"></div>';
+    try {
+        routes[view].render(document.getElementById('view-container'));
+    } catch (err) {
+        console.error(err);
+        main.innerHTML = `<div class="stat-card" role="alert">Unable to open this view: ${escapeHTML(err.message)}</div>`;
+    }
 }
 
 // ===== GLOBAL SEARCH / COMMAND PALETTE (Ctrl+K) =====
 function initSearchModal() {
     const modal = document.getElementById('search-modal');
-    const triggerBtn = document.getElementById('search-trigger-btn');
-    const closeBtn = document.getElementById('modal-close-btn');
     const input = document.getElementById('modal-search-input');
-    const resultsContainer = document.getElementById('modal-search-results');
-
-    if (!modal || !input) return;
-
-    function openModal() {
-        modal.classList.remove('hidden');
-        input.value = '';
-        renderSearchResults('');
-        setTimeout(() => input.focus(), 50);
-    }
-
-    function closeModal() {
+    const results = document.getElementById('modal-search-results');
+    let matches = [], selected = 0, previousFocus;
+    function close() {
         modal.classList.add('hidden');
+        input.setAttribute('aria-expanded', 'false');
+        previousFocus?.focus();
     }
-
-    if (triggerBtn) triggerBtn.addEventListener('click', openModal);
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-            e.preventDefault();
-            if (modal.classList.contains('hidden')) openModal();
-            else closeModal();
-        }
-        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
-
-    input.addEventListener('input', (e) => {
-        renderSearchResults(e.target.value.trim().toLowerCase());
-    });
-
-    function renderSearchResults(query) {
-        const actors = appState.data.actors || [];
-        const infra = appState.data.infrastructure || [];
-        
-        let matches = [];
-
-        if (!query) {
-            // Default suggestions
-            actors.slice(0, 3).forEach(a => matches.push({ type: 'PERSONA', title: a.primary_handle, sub: a.category, view: 'personas', id: a.id }));
-            infra.slice(0, 2).forEach(s => matches.push({ type: 'ONION', title: s.service_name, sub: s.onion_address, view: 'services' }));
-        } else {
-            actors.forEach(a => {
-                if (a.primary_handle.toLowerCase().includes(query) || a.category.toLowerCase().includes(query) || (a.suspect_real_entity?.clearnet_ip && a.suspect_real_entity.clearnet_ip.includes(query))) {
-                    matches.push({ type: 'PERSONA', title: a.primary_handle, sub: `${a.category} • ${a.threat_level}`, view: 'personas', id: a.id });
-                }
-            });
-
-            infra.forEach(s => {
-                if (s.service_name.toLowerCase().includes(query) || s.onion_address.toLowerCase().includes(query) || (s.origin_attribution?.clearnet_ip && s.origin_attribution.clearnet_ip.includes(query))) {
-                    matches.push({ type: 'ONION', title: s.service_name, sub: s.onion_address, view: 'infrastructure' });
-                }
-            });
-        }
-
-        if (!matches.length) {
-            resultsContainer.innerHTML = '<div class="py-6 text-center text-text-muted text-xs">No matching intelligence records found</div>';
-            return;
-        }
-
-        resultsContainer.innerHTML = matches.map(m => `
-            <div class="search-result-item flex items-center justify-between p-2.5 rounded-lg hover:bg-surface-secondary cursor-pointer transition-colors" data-view="${m.view}">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <span class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold ${m.type === 'PERSONA' ? 'bg-primary/10 text-primary' : 'bg-blue-500/10 text-blue-500'} flex-shrink-0">${m.type === 'PERSONA' ? 'ACT' : 'SRV'}</span>
-                    <div class="min-w-0">
-                        <div class="font-medium text-text-main text-xs truncate">${m.title}</div>
-                        <div class="text-[10px] text-text-muted font-mono truncate">${m.sub}</div>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-right text-[10px] text-text-muted flex-shrink-0"></i>
-            </div>
-        `).join('');
-
-        resultsContainer.querySelectorAll('.search-result-item').forEach(el => {
-            el.addEventListener('click', () => {
-                const targetView = el.dataset.view;
-                closeModal();
-                navigateTo(targetView);
-            });
+    function open() {
+        const dossier = document.getElementById('persona-modal');
+        if (dossier?.open) dossier.close();
+        previousFocus = document.activeElement;
+        modal.classList.remove('hidden');
+        input.setAttribute('aria-expanded', 'true');
+        input.value = '';
+        search();
+        input.focus();
+    }
+    function activate() {
+        if (!matches[selected]) return;
+        const m = matches[selected];
+        close();
+        navigateTo(m.view, m.selection);
+    }
+    function highlight() {
+        results.querySelectorAll('[role="option"]').forEach((el, i) => {
+            el.setAttribute('aria-selected', String(i === selected));
+            if (i === selected) {
+                input.setAttribute('aria-activedescendant', el.id);
+                el.scrollIntoView({ block: 'nearest' });
+            }
         });
     }
+    function search() {
+        const query = input.value.trim().toLowerCase();
+        const records = appState.data.actors.map(a => ({type:'ACTOR', title:a.primary_handle, sub:a.category,
+            terms:[a.id, ...(a.handles || []).map(h => h.handle)].join(' '), view:'personas', selection:{actor:a.id}}));
+        appState.data.infrastructure.forEach(s => {
+            records.push({type:'ONION', title:s.service_name, sub:s.onion_address, view:'services', selection:{service:s.onion_address}});
+            if (s.origin_attribution?.clearnet_ip) records.push({type:'ORIGIN IP', title:s.origin_attribution.clearnet_ip,
+                sub:s.service_name, view:'services', selection:{service:s.onion_address}});
+        });
+        appState.data.actors.forEach(a => {
+            const ip = a.suspect_real_entity?.clearnet_ip;
+            if (ip && !records.some(r => r.type === 'ORIGIN IP' && r.title === ip)) {
+                records.push({type:'ORIGIN IP', title:ip, sub:a.primary_handle, view:'personas', selection:{actor:a.id}});
+            }
+        });
+        matches = records.filter(m => !query || `${m.title} ${m.sub} ${m.terms || ''}`.toLowerCase().includes(query)).slice(0, 30);
+        selected = 0;
+        input.removeAttribute('aria-activedescendant');
+        results.innerHTML = matches.length ? matches.map((m,i) => `<div id="search-option-${i}" role="option" aria-selected="false" class="search-result-item" data-index="${i}">
+            <span class="search-kind">${m.type}</span><div class="min-w-0"><div class="font-semibold truncate">${escapeHTML(m.title)}</div><div class="text-text-muted font-mono text-[10px] truncate">${escapeHTML(m.sub)}</div></div><span class="text-text-muted">↵</span></div>`).join('') : '<p class="p-6 text-center text-text-muted" role="status">No matching intelligence records found.</p>';
+        highlight();
+    }
+    results.onclick = e => {
+        const option = e.target.closest('[data-index]');
+        if (option) { selected = Number(option.dataset.index); activate(); }
+    };
+    input.oninput = search;
+    document.getElementById('search-trigger-btn').onclick = open;
+    document.getElementById('modal-close-btn').onclick = close;
+    modal.onclick = e => { if (e.target === modal) close(); };
+    document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            modal.classList.contains('hidden') ? open() : close();
+            return;
+        }
+        if (modal.classList.contains('hidden')) return;
+        if (e.key === 'Escape') { e.preventDefault(); close(); }
+        if (e.key === 'Enter' && e.target === input) { e.preventDefault(); activate(); }
+        if (['ArrowDown','ArrowUp'].includes(e.key) && matches.length) {
+            e.preventDefault();
+            selected = (selected + (e.key === 'ArrowDown' ? 1 : -1) + matches.length) % matches.length;
+            highlight();
+        }
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const closeButton = document.getElementById('modal-close-btn');
+            (document.activeElement === input ? closeButton : input).focus();
+        }
+    });
 }
 
 // ===== DATA INGESTION =====
@@ -245,18 +227,34 @@ async function fetchInitialData() {
             fetch('/api/infrastructure')
         ]);
         
+        if (![statsRes, actorsRes, infraRes].every(r => r.ok)) throw new Error('Intelligence API unavailable');
         if (statsRes.ok) appState.data.stats = await statsRes.json();
         if (actorsRes.ok) appState.data.actors = await actorsRes.json();
         if (infraRes.ok) appState.data.infrastructure = await infraRes.json();
         
-        console.log(`[DeProxy] Loaded ${appState.data.actors.length} actors, ${appState.data.infrastructure.length} services`);
+        console.log(`[Anduril] Loaded ${appState.data.actors.length} actors, ${appState.data.infrastructure.length} services`);
         
         if (appState.currentView === 'dashboard') {
             navigateTo('dashboard');
         }
     } catch (err) {
-        console.error("[DeProxy] Failed to load data:", err);
+        document.getElementById('main-content').innerHTML = '<div class="stat-card" role="alert"><h2 class="font-semibold mb-2">Intelligence data unavailable</h2><p class="text-sm text-text-muted mb-4">Check the local server connection and try again.</p><button class="btn-primary" onclick="fetchInitialData()">Retry connection</button></div>';
     }
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
+function downloadArtifact(filename, content, type = 'application/json') {
+    const url = URL.createObjectURL(new Blob([content], {type}));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function loadLocalState(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch (_) { return fallback; }
+}
+function saveLocalState(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {}
+}
