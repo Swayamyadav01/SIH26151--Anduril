@@ -131,53 +131,62 @@ Traditional dark web monitoring either relies on brittle keyword scrapers or bla
 
 ```mermaid
 graph TD
-    Client[Analyst Browser / Forensic Workstation]
+    Client["Analyst Browser / Forensic Workstation"]
     
-    subgraph UI_Layer [User Interface & Visualization Layer]
-        Router[SPA Router & State Manager - app.js]
-        Palette[Global Command Palette - Ctrl+K]
-        GlobeView[3D WebGL Globe & TopoJSON Fallback]
-        GraphView[Stabilized vis-network Link Graph]
-        StyloView[NLP Stylometry Attribution Lab]
-        Views[Dossiers / Infrastructure / Alerts / Reports]
+    subgraph UI_Layer ["User Interface & Visualization Layer"]
+        Router["SPA Router & State Manager (app.js)"]
+        Palette["Global Command Palette (Ctrl+K)"]
+        GlobeView["3D WebGL Globe & TopoJSON Fallback"]
+        GraphView["Stabilized vis-network Link Graph"]
+        StyloView["NLP Stylometry Attribution Lab"]
+        Views["Dossiers / Infrastructure / Alerts / Reports"]
     end
     
-    subgraph Express_Backend [Express.js REST Engine - server.js]
-        Server[Dual Listener: Ports 3000 / 3100]
-        API_Stats[/api/stats]
-        API_Actors[/api/actors & /api/actors/:id]
-        API_Infra[/api/infrastructure]
-        API_Graph[/api/graph]
-        API_Stylo[/api/stylometry/match]
-        API_Scan[/api/scan & /api/scan/active]
-        API_Passive[/api/audit/passive & /api/audit/dorks]
+    subgraph Express_Backend ["Express.js REST Engine (server.js)"]
+        Server["Dual Listener (Ports 3000 / 3100)"]
+        API_Stats["GET /api/stats"]
+        API_Actors["GET /api/actors"]
+        API_Infra["GET /api/infrastructure"]
+        API_Graph["GET /api/graph"]
+        API_Stylo["POST /api/stylometry/match"]
+        API_Scan["POST /api/scan"]
+        API_Passive["POST /api/audit/passive"]
     end
 
-    subgraph Data_Stores [Flat-File Forensic Datasets]
-        DB_Actors[data/threat_actors.json]
-        DB_Onion[data/hidden_services.json]
-        DB_Corpus[data/stylometric_corpus.json]
-        DB_Events[data/events.json]
+    subgraph Data_Stores ["Flat-File Forensic Datasets"]
+        DB_Actors["data/threat_actors.json"]
+        DB_Onion["data/hidden_services.json"]
+        DB_Corpus["data/stylometric_corpus.json"]
+        DB_Events["data/events.json"]
     end
 
-    subgraph Recon_Subsystem [Passive & Active Audit Pipeline]
-        NodeService[audit_service.js - Native Node Engine]
-        PyAuditor[passive_auditor.py - Cert/JARM/Favicon]
-        PyDorker[dork_builder.py - Shodan/FOFA Queries]
+    subgraph Recon_Subsystem ["Passive & Active Audit Pipeline"]
+        NodeService["audit_service.js (Native Node Engine)"]
+        PyAuditor["passive_auditor.py (Cert/JARM/Favicon)"]
+        PyDorker["dork_builder.py (Shodan/FOFA Queries)"]
     end
     
     Client --> Palette
     Palette --> Router
-    Router --> GlobeView & GraphView & StyloView & Views
+    Router --> GlobeView
+    Router --> GraphView
+    Router --> StyloView
+    Router --> Views
     
     GlobeView --> API_Stats
     GraphView --> API_Graph
     StyloView --> API_Stylo
-    Views --> API_Actors & API_Infra & API_Scan
+    Views --> API_Actors
+    Views --> API_Infra
+    Views --> API_Scan
     
-    Server --> DB_Actors & DB_Onion & DB_Corpus & DB_Events
+    Server --> DB_Actors
+    Server --> DB_Onion
+    Server --> DB_Corpus
+    Server --> DB_Events
     API_Passive --> NodeService
-    API_Passive -.-> PyAuditor & PyDorker
+    API_Passive -.-> PyAuditor
+    API_Passive -.-> PyDorker
 ```
 
 ### Directory Structure
