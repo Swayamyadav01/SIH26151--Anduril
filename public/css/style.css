@@ -4,44 +4,44 @@
 
 /* Theme Variables (Light Mode Default) */
 :root {
-    --bg-main: #f8fafc;
-    --bg-surface: #ffffff;
-    --bg-subtle: #f1f5f9;
-    --bg-surface-hover: #f8fafc;
-    --border-color: #e2e8f0;
-    --border-color-subtle: #f1f5f9;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --text-subtle: #94a3b8;
+    --bg-main: #000000;
+    --bg-surface: #2A272A;
+    --bg-subtle: #4B4A54;
+    --bg-surface-hover: #4B4A54;
+    --border-color: #4B4A54;
+    --border-color-subtle: #2A272A;
+    --text-main: #e2e8f0;
+    --text-muted: #82A0AA;
+    --text-subtle: #677381;
     
-    --card-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
-    --card-hover-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+    --card-hover-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
     
-    --badge-high-bg: #fee2e2;
-    --badge-high-text: #b91c1c;
-    --badge-med-bg: #fef3c7;
-    --badge-med-text: #b45309;
-    --badge-low-bg: #d1fae5;
-    --badge-low-text: #047857;
-    --badge-info-bg: #dbeafe;
-    --badge-info-text: #1d4ed8;
+    --badge-high-bg: rgba(239, 68, 68, 0.15);
+    --badge-high-text: #f87171;
+    --badge-med-bg: rgba(245, 158, 11, 0.15);
+    --badge-med-text: #fbbf24;
+    --badge-low-bg: rgba(163, 207, 205, 0.15);
+    --badge-low-text: #A3CFCD;
+    --badge-info-bg: rgba(130, 160, 170, 0.15);
+    --badge-info-text: #82A0AA;
     
-    --nav-active-bg: #ccfbf1;
-    --nav-active-text: #0f766e;
-    --graph-bg: #ffffff;
+    --nav-active-bg: rgba(163, 207, 205, 0.15);
+    --nav-active-text: #A3CFCD;
+    --graph-bg: #000000;
 }
 
 /* Dark Mode Theme Variables (Sleek Slate/Charcoal - No cheesy neon) */
 html.dark {
-    --bg-main: #0b0f19;
-    --bg-surface: #111827;
-    --bg-subtle: #1e293b;
-    --bg-surface-hover: #172033;
-    --border-color: #1f293d;
-    --border-color-subtle: #162032;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --text-subtle: #64748b;
+    --bg-main: #000000;
+    --bg-surface: #2A272A;
+    --bg-subtle: #4B4A54;
+    --bg-surface-hover: #4B4A54;
+    --border-color: #4B4A54;
+    --border-color-subtle: #2A272A;
+    --text-main: #e2e8f0;
+    --text-muted: #82A0AA;
+    --text-subtle: #677381;
     
     --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
     --card-hover-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.5);
@@ -50,14 +50,14 @@ html.dark {
     --badge-high-text: #fca5a5;
     --badge-med-bg: rgba(245, 158, 11, 0.16);
     --badge-med-text: #fcd34d;
-    --badge-low-bg: rgba(16, 185, 129, 0.16);
-    --badge-low-text: #6ee7b7;
-    --badge-info-bg: rgba(59, 130, 246, 0.16);
-    --badge-info-text: #93c5fd;
+    --badge-low-bg: rgba(163, 207, 205, 0.16);
+    --badge-low-text: #A3CFCD;
+    --badge-info-bg: rgba(130, 160, 170, 0.16);
+    --badge-info-text: #82A0AA;
     
-    --nav-active-bg: rgba(20, 184, 166, 0.16);
-    --nav-active-text: #2dd4bf;
-    --graph-bg: #0d131f;
+    --nav-active-bg: rgba(163, 207, 205, 0.16);
+    --nav-active-text: #A3CFCD;
+    --graph-bg: #000000;
 }
 
 /* Global Dark Mode Overrides for Tailwind Utilities */
@@ -137,7 +137,7 @@ html.dark textarea::placeholder {
 .stat-card:hover {
     box-shadow: var(--card-hover-shadow);
     transform: translateY(-2px);
-    border-color: rgba(20, 184, 166, 0.4);
+    border-color: rgba(163, 207, 205, 0.4);
 }
 
 /* Data Tables (Prevents table cell contents from expanding uncontrollably) */
@@ -411,12 +411,12 @@ html.dark #theme-toggle .fa-moon { display:none; }
 .graph-stage > .absolute { background:var(--bg-surface); }
 /* RGB channels let Tailwind opacity utilities preserve the same theme palette. */
 :root {
-    --bg-main-rgb:248 250 252; --bg-surface-rgb:255 255 255; --bg-subtle-rgb:241 245 249;
-    --border-color-rgb:226 232 240; --text-main-rgb:15 23 42; --text-muted-rgb:100 116 139;
+    --bg-main-rgb:0 0 0; --bg-surface-rgb:42 39 42; --bg-subtle-rgb:75 74 84;
+    --border-color-rgb:75 74 84; --text-main-rgb:226 232 240; --text-muted-rgb:130 160 170;
 }
 html.dark {
-    --bg-main-rgb:11 15 25; --bg-surface-rgb:17 24 39; --bg-subtle-rgb:30 41 59;
-    --border-color-rgb:31 41 61; --text-main-rgb:248 250 252; --text-muted-rgb:148 163 184;
+    --bg-main-rgb:0 0 0; --bg-surface-rgb:42 39 42; --bg-subtle-rgb:75 74 84;
+    --border-color-rgb:75 74 84; --text-main-rgb:226 232 240; --text-muted-rgb:130 160 170;
 }
 .stat-card.overflow-y-auto { overflow-y:auto; }
 @media (max-width:767px) {

@@ -197,9 +197,9 @@ async function init3DGlobe() {
         if (!container.isConnected || controller.signal.aborted) return;
         const markers = [
             {lat:44.4323,lng:26.1063,name:'Bucharest, Romania',label:'Origin IP · 185.220.101.45',color:'#f43f5e',size:0.65},
-            {lat:38.9072,lng:-77.0369,name:'Washington DC, USA',label:'Target ingress',color:'#14b8a6',size:0.5},
-            {lat:48.8566,lng:2.3522,name:'Paris, France',label:'Target ingress',color:'#14b8a6',size:0.5},
-            {lat:55.7558,lng:37.6173,name:'Moscow, Russia',label:'Target ingress',color:'#14b8a6',size:0.5}
+            {lat:38.9072,lng:-77.0369,name:'Washington DC, USA',label:'Target ingress',color:'#A3CFCD',size:0.5},
+            {lat:48.8566,lng:2.3522,name:'Paris, France',label:'Target ingress',color:'#A3CFCD',size:0.5},
+            {lat:55.7558,lng:37.6173,name:'Moscow, Russia',label:'Target ingress',color:'#A3CFCD',size:0.5}
         ];
         const arcs = markers.slice(1).map(m => ({startLat:m.lat,startLng:m.lng,endLat:44.4323,endLng:26.1063}));
         const globe = new Globe(container, {animateIn:false})
@@ -211,7 +211,7 @@ async function init3DGlobe() {
             .polygonsTransitionDuration(0)
             .pointsData(markers).pointAltitude(0.02).pointColor('color').pointRadius('size')
             .pointLabel(d => `<div class="globe-tooltip"><b>${d.name}</b><br><span>${d.label}</span></div>`)
-            .arcsData(arcs).arcColor(() => ['#14b8a6','#f43f5e'])
+            .arcsData(arcs).arcColor(() => ['#A3CFCD','#f43f5e'])
             .arcDashLength(0.45).arcDashGap(0.3).arcDashAnimateTime(reducedMotion() ? 0 : 2400).arcStroke(0.35)
             .ringsData(reducedMotion() ? [] : [markers[0]])
             .ringColor(() => t => `rgba(244,63,94,${1-t})`)
@@ -355,9 +355,9 @@ function renderActivityChart() {
         data: {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             datasets: [
-                { label: 'New Onions', data: [12, 19, 15, 25, 22, 30, 28], borderColor: '#14b8a6', backgroundColor: 'rgba(20,184,166,0.06)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
-                { label: 'Threat Actors', data: [8, 12, 10, 18, 15, 22, 25], borderColor: '#3b82f6', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
-                { label: 'Infra Probes', data: [5, 8, 6, 12, 10, 15, 12], borderColor: '#f59e0b', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 }
+                { label: 'New Onions', data: [12, 19, 15, 25, 22, 30, 28], borderColor: '#A3CFCD', backgroundColor: 'rgba(163,207,205,0.06)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+                { label: 'Threat Actors', data: [8, 12, 10, 18, 15, 22, 25], borderColor: '#82A0AA', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+                { label: 'Infra Probes', data: [5, 8, 6, 12, 10, 15, 12], borderColor: '#677381', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 }
             ]
         },
         options: {
@@ -391,7 +391,7 @@ function renderCategoryChart(actors) {
 
     const labels = Object.keys(categories).length ? Object.keys(categories) : ['Data Broker', 'Ransomware', 'Syndicate', 'APT'];
     const data = Object.values(categories).length ? Object.values(categories) : [2, 1, 1, 1];
-    const colors = ['#14b8a6', '#ef4444', '#f59e0b', '#3b82f6'];
+    const colors = ['#A3CFCD', '#82A0AA', '#677381', '#82A0AA'];
 
     new Chart(ctx, {
         type: 'doughnut',
@@ -419,7 +419,7 @@ function renderConfidenceChart(actors) {
 
     const labels = actors.map(a => a.primary_handle);
     const data = actors.map(a => a.attribution_confidence);
-    const bgColors = data.map(v => v >= 90 ? '#10b981' : v >= 80 ? '#f59e0b' : '#ef4444');
+    const bgColors = data.map(v => v >= 90 ? '#A3CFCD' : v >= 80 ? '#677381' : '#82A0AA');
 
     if (!labels.length) return;
 

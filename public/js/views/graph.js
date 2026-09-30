@@ -165,7 +165,7 @@ function initEnterpriseGraph(nodesData, edgesData) {
             },
             color: {
                 color: dark ? '#334155' : '#cbd5e1',
-                highlight: '#14b8a6'
+                highlight: '#A3CFCD'
             },
             width: 1
         },
