@@ -4,31 +4,31 @@
 
 /* Theme Variables (Light Mode Default) */
 :root {
-    --bg-main: #000000;
-    --bg-surface: #2A272A;
-    --bg-subtle: #4B4A54;
-    --bg-surface-hover: #4B4A54;
-    --border-color: #4B4A54;
-    --border-color-subtle: #2A272A;
-    --text-main: #e2e8f0;
-    --text-muted: #82A0AA;
-    --text-subtle: #677381;
+    --bg-main: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-subtle: #f1f5f9;
+    --bg-surface-hover: #f8fafc;
+    --border-color: #e2e8f0;
+    --border-color-subtle: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-subtle: #94a3b8;
     
-    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
-    --card-hover-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+    --card-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+    --card-hover-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
     
-    --badge-high-bg: rgba(239, 68, 68, 0.15);
-    --badge-high-text: #f87171;
-    --badge-med-bg: rgba(245, 158, 11, 0.15);
-    --badge-med-text: #fbbf24;
-    --badge-low-bg: rgba(163, 207, 205, 0.15);
-    --badge-low-text: #A3CFCD;
-    --badge-info-bg: rgba(130, 160, 170, 0.15);
-    --badge-info-text: #82A0AA;
+    --badge-high-bg: #fee2e2;
+    --badge-high-text: #b91c1c;
+    --badge-med-bg: #fef3c7;
+    --badge-med-text: #b45309;
+    --badge-low-bg: #d1fae5;
+    --badge-low-text: #047857;
+    --badge-info-bg: #dbeafe;
+    --badge-info-text: #1d4ed8;
     
-    --nav-active-bg: rgba(163, 207, 205, 0.15);
-    --nav-active-text: #A3CFCD;
-    --graph-bg: #000000;
+    --nav-active-bg: #ccfbf1;
+    --nav-active-text: #0f766e;
+    --graph-bg: #ffffff;
 }
 
 /* Dark Mode Theme Variables (Sleek Slate/Charcoal - No cheesy neon) */
@@ -411,13 +411,27 @@ html.dark #theme-toggle .fa-moon { display:none; }
 .graph-stage > .absolute { background:var(--bg-surface); }
 /* RGB channels let Tailwind opacity utilities preserve the same theme palette. */
 :root {
-    --bg-main-rgb:0 0 0; --bg-surface-rgb:42 39 42; --bg-subtle-rgb:75 74 84;
-    --border-color-rgb:75 74 84; --text-main-rgb:226 232 240; --text-muted-rgb:130 160 170;
+    --bg-main-rgb: 248 250 252;
+    --bg-surface-rgb: 255 255 255;
+    --bg-subtle-rgb: 241 245 249;
+    --border-color-rgb: 226 232 240;
+    --text-main-rgb: 15 23 42;
+    --text-muted-rgb: 100 116 139;
 }
 html.dark {
-    --bg-main-rgb:0 0 0; --bg-surface-rgb:42 39 42; --bg-subtle-rgb:75 74 84;
-    --border-color-rgb:75 74 84; --text-main-rgb:226 232 240; --text-muted-rgb:130 160 170;
+    --bg-main-rgb: 0 0 0;
+    --bg-surface-rgb: 42 39 42;
+    --bg-subtle-rgb: 75 74 84;
+    --border-color-rgb: 75 74 84;
+    --text-main-rgb: 226 232 240;
+    --text-muted-rgb: 130 160 170;
 }
+html.dark .text-primary { color: #A3CFCD !important; }
+html.dark .bg-primary { background-color: #82A0AA !important; }
+html.dark .border-primary { border-color: #A3CFCD !important; }
+html.dark .bg-primary-light { background-color: rgba(163, 207, 205, 0.15) !important; }
+html.dark .hover\:bg-primary-dark:hover { background-color: #677381 !important; }
+html.dark .hover\:text-primary-dark:hover { color: #A3CFCD !important; }
 .stat-card.overflow-y-auto { overflow-y:auto; }
 @media (max-width:767px) {
     .overflow-x-auto > table { min-width:640px; }

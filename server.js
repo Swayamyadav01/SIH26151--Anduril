@@ -121,9 +121,9 @@ app.get('/api/graph', (req, res) => {
         shape: 'dot',
         size: 22,
         color: {
-          background: actor.threat_level === 'CRITICAL' ? '#A3CFCD' : '#82A0AA',
-          border: actor.threat_level === 'CRITICAL' ? '#82A0AA' : '#677381',
-          highlight: { background: '#A3CFCD', border: '#82A0AA' }
+          background: actor.threat_level === 'CRITICAL' ? '#f43f5e' : '#f59e0b',
+          border: actor.threat_level === 'CRITICAL' ? '#be123c' : '#b45309',
+          highlight: { background: '#14b8a6', border: '#0f766e' }
         },
         borderWidth: 2
       });
@@ -139,7 +139,7 @@ app.get('/api/graph', (req, res) => {
           group: 'HANDLE',
           shape: 'dot',
           size: 11,
-          color: { background: '#677381', border: '#4B4A54', highlight: { background: '#82A0AA', border: '#677381' } },
+          color: { background: '#3b82f6', border: '#1d4ed8', highlight: { background: '#60a5fa', border: '#2563eb' } },
           borderWidth: 1.5
         });
         addedNodes.add(handleId);
@@ -148,7 +148,7 @@ app.get('/api/graph', (req, res) => {
         from: actorNodeId,
         to: handleId,
         label: 'alias',
-        color: { color: '#677381', highlight: '#82A0AA' },
+        color: { color: '#94a3b8', highlight: '#3b82f6' },
         arrows: { to: { enabled: true, scaleFactor: 0.4 } },
         dashes: true
       });
@@ -163,7 +163,7 @@ app.get('/api/graph', (req, res) => {
           group: 'PGP',
           shape: 'dot',
           size: 11,
-          color: { background: '#4B4A54', border: '#2A272A', highlight: { background: '#677381', border: '#4B4A54' } },
+          color: { background: '#8b5cf6', border: '#6d28d9', highlight: { background: '#a78bfa', border: '#7c3aed' } },
           borderWidth: 1.5
         });
         addedNodes.add(pgpId);
@@ -172,7 +172,7 @@ app.get('/api/graph', (req, res) => {
         from: actorNodeId,
         to: pgpId,
         label: 'signed_by',
-        color: { color: '#677381', highlight: '#4B4A54' },
+        color: { color: '#94a3b8', highlight: '#8b5cf6' },
         arrows: { to: { enabled: true, scaleFactor: 0.4 } }
       });
     });
@@ -186,7 +186,7 @@ app.get('/api/graph', (req, res) => {
           group: 'WALLET',
           shape: 'dot',
           size: 11,
-          color: { background: '#A3CFCD', border: '#82A0AA', highlight: { background: '#A3CFCD', border: '#82A0AA' } },
+          color: { background: '#10b981', border: '#047857', highlight: { background: '#34d399', border: '#059669' } },
           borderWidth: 1.5
         });
         addedNodes.add(walletId);
@@ -195,7 +195,7 @@ app.get('/api/graph', (req, res) => {
         from: actorNodeId,
         to: walletId,
         label: 'funds',
-        color: { color: '#677381', highlight: '#A3CFCD' },
+        color: { color: '#94a3b8', highlight: '#10b981' },
         arrows: { to: { enabled: true, scaleFactor: 0.4 } }
       });
     });
@@ -210,7 +210,7 @@ app.get('/api/graph', (req, res) => {
           shape: 'box',
           margin: 8,
           size: 14,
-          color: { background: '#82A0AA', border: '#677381', highlight: { background: '#A3CFCD', border: '#82A0AA' } },
+          color: { background: '#f59e0b', border: '#b45309', highlight: { background: '#fbbf24', border: '#d97706' } },
           font: { color: '#ffffff', size: 10, face: 'JetBrains Mono' },
           borderWidth: 2
         });
@@ -220,7 +220,7 @@ app.get('/api/graph', (req, res) => {
         from: actorNodeId,
         to: ipId,
         label: 'UNMASKED (' + actor.attribution_confidence + '%)',
-        color: { color: '#82A0AA', highlight: '#A3CFCD' },
+        color: { color: '#f59e0b', highlight: '#d97706' },
         width: 2,
         arrows: { to: { enabled: true, scaleFactor: 0.6 } }
       });

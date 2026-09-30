@@ -3,7 +3,7 @@ module.exports = {
     darkMode: 'class',
     theme: { extend: {
         colors: {
-            primary:'#A3CFCD', 'primary-dark':'#82A0AA', 'primary-light':'rgba(163,207,205,0.15)',
+            primary:'#14b8a6', 'primary-dark':'#0f766e', 'primary-light':'#ccfbf1',
             danger:'#ef4444', warning:'#f59e0b', success:'#10b981',
             background:'rgb(var(--bg-main-rgb) / <alpha-value>)', surface:'rgb(var(--bg-surface-rgb) / <alpha-value>)', 'surface-secondary':'rgb(var(--bg-subtle-rgb) / <alpha-value>)',
             'border-color':'rgb(var(--border-color-rgb) / <alpha-value>)', 'text-main':'rgb(var(--text-main-rgb) / <alpha-value>)', 'text-muted':'rgb(var(--text-muted-rgb) / <alpha-value>)'

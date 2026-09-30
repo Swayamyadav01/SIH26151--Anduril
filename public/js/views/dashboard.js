@@ -355,9 +355,9 @@ function renderActivityChart() {
         data: {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             datasets: [
-                { label: 'New Onions', data: [12, 19, 15, 25, 22, 30, 28], borderColor: '#A3CFCD', backgroundColor: 'rgba(163,207,205,0.06)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
-                { label: 'Threat Actors', data: [8, 12, 10, 18, 15, 22, 25], borderColor: '#82A0AA', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
-                { label: 'Infra Probes', data: [5, 8, 6, 12, 10, 15, 12], borderColor: '#677381', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 }
+                { label: 'New Onions', data: [12, 19, 15, 25, 22, 30, 28], borderColor: dark ? '#A3CFCD' : '#14b8a6', backgroundColor: dark ? 'rgba(163,207,205,0.08)' : 'rgba(20,184,166,0.06)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+                { label: 'Threat Actors', data: [8, 12, 10, 18, 15, 22, 25], borderColor: dark ? '#82A0AA' : '#3b82f6', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+                { label: 'Infra Probes', data: [5, 8, 6, 12, 10, 15, 12], borderColor: dark ? '#677381' : '#f59e0b', tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 }
             ]
         },
         options: {
@@ -391,7 +391,7 @@ function renderCategoryChart(actors) {
 
     const labels = Object.keys(categories).length ? Object.keys(categories) : ['Data Broker', 'Ransomware', 'Syndicate', 'APT'];
     const data = Object.values(categories).length ? Object.values(categories) : [2, 1, 1, 1];
-    const colors = ['#A3CFCD', '#82A0AA', '#677381', '#82A0AA'];
+    const colors = dark ? ['#A3CFCD', '#82A0AA', '#677381', '#4B4A54'] : ['#14b8a6', '#ef4444', '#f59e0b', '#3b82f6'];
 
     new Chart(ctx, {
         type: 'doughnut',
@@ -419,7 +419,7 @@ function renderConfidenceChart(actors) {
 
     const labels = actors.map(a => a.primary_handle);
     const data = actors.map(a => a.attribution_confidence);
-    const bgColors = data.map(v => v >= 90 ? '#A3CFCD' : v >= 80 ? '#677381' : '#82A0AA');
+    const bgColors = data.map(v => dark ? (v >= 90 ? '#A3CFCD' : v >= 80 ? '#82A0AA' : '#677381') : (v >= 90 ? '#10b981' : v >= 80 ? '#f59e0b' : '#ef4444'));
 
     if (!labels.length) return;
 
