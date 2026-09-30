@@ -18,7 +18,7 @@
   Featuring real-time WebGL globe telemetry, stabilized link-analysis graphs, passive cryptographic reconnaissance, and computational stylometry.
 </p>
 
-[Executive Overview](#-executive-overview) •
+[About & Overview](#-about-anduril--executive-overview) •
 [Core Differentiators](#-core-differentiators--forensic-innovations) •
 [Tech Stack](#-technology-stack) •
 [System Architecture](#-system-architecture) •
@@ -36,7 +36,12 @@
 ---
 
 ## 📑 Table of Contents
-1. [🎯 Executive Overview](#-executive-overview)
+1. [🎯 About Anduril & Executive Overview](#-about-anduril--executive-overview)
+   - [Mission Statement & Background](#1-mission-statement--background-sih-psid-26151)
+   - [The Darknet Attribution Chasm](#2-the-darknet-attribution-chasm-the-problem-space)
+   - [The Anduril Solution: Multi-Layered Corroboration](#3-the-anduril-solution-multi-layered-deterministic-corroboration)
+   - [Comparative Capability Matrix](#4-comparative-capability-matrix)
+   - [Target Deployment Scenarios](#5-target-deployment-scenarios)
 2. [💡 Core Differentiators & Forensic Innovations](#-core-differentiators--forensic-innovations)
 3. [🛠️ Technology Stack](#-technology-stack)
 4. [🏗️ System Architecture](#-system-architecture)
@@ -62,14 +67,72 @@
 
 ---
 
-## 🎯 Executive Overview
+## 🎯 About Anduril & Executive Overview
 
-**Anduril** (formerly *DeProxy*) is an end-to-end investigative cyber threat intelligence (CTI) platform engineered to solve **Smart India Hackathon Problem Statement 26151**: unmasking both **(1) the operators controlling illicit dark web sites** and **(2) targeted threat actors operating within darknet ecosystems**.
+### 1. Mission Statement & Background (SIH PSID: 26151)
+**Anduril** (formerly *DeProxy*) is an enterprise-grade cyber threat intelligence (CTI) and digital forensics platform specifically designed to tackle **Smart India Hackathon Problem Statement 26151**: *Targeted Dark Web Operator & User De-Anonymization*.
 
-Traditional dark web monitoring either relies on brittle keyword scrapers or black-box neural networks prone to false-positive hallucinations. **Anduril introduces an explainable, multi-vector corroboration methodology**:
-- **Bypasses Tor onion encryption passively** via cryptographic certificate cross-matching, JARM TLS fingerprinting, Favicon MurmurHash3 hashing, and server scoreboard leaks.
-- **De-anonymizes pseudonymous actors** by unifying digital breadcrumbs across underground forums (BreachForums, Dread, XSS, Telegram) with statistical NLP stylometry, PGP key trust graphs, and cryptocurrency UTXO flow tracing.
-- **Enforces rigorous mathematical gating**: A composite confidence scoring engine with channel-specific dampening and global hard gates ensures forensic conclusions are admissible, transparent, and defensible in judicial proceedings.
+The platform provides national cybersecurity agencies, federal law enforcement, CERT/CSIRT units, and defensive security operations centers (SOCs) with an explainable, court-admissible investigative workbench to unmask:
+1. **The physical infrastructure and operators** hosting and running illicit `.onion` v3 hidden services.
+2. **The real-world personas and identities** of targeted threat actors, ransomware operators, data brokers, and cyber syndicates operating across underground forums.
+
+---
+
+### 2. The Darknet Attribution Chasm: The Problem Space
+The Tor network's architecture purposefully decouples public network addresses from server hardware:
+- **Tor v3 Cryptographic Camouflage**: Onion routing obscures IP addresses through multi-hop circuit rendezvous points, rendering traditional traceroutes, WHOIS lookups, and reverse DNS completely ineffective.
+- **The Attribution Asymmetry**: Cyber adversaries operate with near-zero friction across underground forums (BreachForums, Dread, XSS, Exploit.in, Telegram), launching ransomware campaigns, auctioning critical infrastructure leaks, and laundering proceeds through cryptocurrency mixers.
+- **The Flaws of Legacy CTI Tools**: Existing solutions either rely on:
+  - *Naive keyword scraping* that breaks on minor forum markup changes, or
+  - *Opaque neural network heuristics* that produce unsubstantiated "hunches" prone to hallucinations and devastating false-positive criminal attributions.
+
+---
+
+### 3. The Anduril Solution: Multi-Layered Deterministic Corroboration
+Anduril abandons single-point heuristic guesses in favor of a **Four-Pillar Corroboration Architecture**:
+
+```
+                       ┌────────────────────────────────────────────────────────┐
+                       │               THE 4 PILLARS OF ANDURIL                 │
+                       └───────────────────────────────────┬────────────────────┘
+                                                           │
+        ┌──────────────────────────────────┬───────────────┴───────────────┬──────────────────────────────────┐
+        ▼                                  ▼                               ▼                                  ▼
+┌───────────────────────────────┐ ┌───────────────────────────────┐ ┌───────────────────────────────┐ ┌───────────────────────────────┐
+│     PILLAR I: NETWORK &       │ │    PILLAR II: PERSONA &       │ │    PILLAR III: COMPUTATIONAL  │ │      PILLAR IV: TWO-TIER    │
+│    INFRASTRUCTURE AUDIT       │ │       IDENTITY FUSION         │ │         NLP STYLOMETRY        │ │         FUSION GATING       │
+├───────────────────────────────┤ ├───────────────────────────────┤ ├───────────────────────────────┤ ├───────────────────────────────┤
+│ • SSL/TLS Cert SAN & Serial   │ │ • Cross-Forum Handle Linking  │ │ • Type-Token Ratio (TTR)      │ │ • Level 1: Reliability Damp.  │
+│ • JARM Multi-Client TLS Probe │ │ • PGP Fingerprint Trust Web   │ │ • Shannon Punctuation Entropy │ │ • Level 2: Hard Gate Refusal  │
+│ • Favicon MurmurHash3 (MMH3)  │ │ • BTC/XMR UTXO & KYC Tracing  │ │ • Syntax Markers (::, bro)    │ │ • Zero-Hallucination Guard    │
+│ • Apache /server-status Leaks │ │ • Telegram / Jabber Footprint │ │ • Currency Postfix Formatting │ │ • Mathematical Reproducibility│
+│ • Blind SSRF / SQLi OOB Egress│ │ • 24h Activity Cadence Wheel  │ │ • Ranked Linguistic Matching  │ │ • Court-Admissible Dossiers   │
+└───────────────────────────────┘ └───────────────────────────────┘ └───────────────────────────────┘ └───────────────────────────────┘
+```
+
+---
+
+### 4. Comparative Capability Matrix
+
+| Forensic Capability | Conventional Darknet Crawlers | Commercial CTI Feeds | Anduril Platform |
+| :--- | :---: | :---: | :---: |
+| **Origin IP Discovery** | ❌ Not Supported (Tor Only) | ⚠️ Generic Shodan Queries | ✅ **Multi-Vector Passive & Active OOB Probing** |
+| **JARM & Favicon Correlation** | ❌ None | ⚠️ Manual Lookups | ✅ **Automated Shodan & FOFA Dork Generation** |
+| **Authorship Attribution** | ❌ None | ⚠️ Keyword Tagging | ✅ **Statistical NLP Stylometry & Dialect Signatures** |
+| **False-Positive Prevention** | ❌ High Error Rate | ⚠️ Confidence Guesswork | ✅ **Deterministic Two-Tier Contradiction Hard Gates** |
+| **Network Air-Gap Readiness** | ❌ Requires Cloud SaaS | ❌ Requires Cloud APIs | ✅ **100% Zero-External-CDN Self-Hosted Offline** |
+| **Topology Link Analysis** | ❌ Static Tables | ⚠️ Basic Charts | ✅ **Stabilized Force Graph with Physics Freeze** |
+| **3D Telemetry Visualization** | ❌ None | ⚠️ Static 2D Maps | ✅ **Real-Time WebGL Globe with TopoJSON Fallback** |
+| **Evidence Dossier Generation** | ⚠️ Plain Screenshots | ⚠️ Standard PDF Summary | ✅ **Forensic Export in PDF, JSON, & Clean CSV** |
+
+---
+
+### 5. Target Deployment Scenarios
+
+- 🏛️ **Federal Law Enforcement & Cyber Crime Cells**: Generate evidence-backed forensic case dossiers for judicial subpoenas, search warrants, and criminal indictments.
+- 🛡️ **National Defense & CERT / CSIRT Units**: De-anonymize state-sponsored Advanced Persistent Threat (APT) syndicates and command-and-control (C2) darknet relays.
+- 🏢 **Enterprise Threat Intelligence (CTI) & SOCs**: Correlate intercepted ransomware extortion communiqués and identify source leak portals before public disclosure.
+- 🎓 **Forensic Researchers & Academic Labs**: Experiment with computational stylometry and passive dark web network topology in a secure, air-gapped sandbox.
 
 ---
 
