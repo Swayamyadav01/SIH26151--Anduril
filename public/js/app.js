@@ -1,4 +1,4 @@
-// Anduril Application Core & Navigation Controller
+﻿// Anduril Application Core & Navigation Controller
 const appState = {
     currentView: 'dashboard',
     theme: 'light',
@@ -34,9 +34,11 @@ function initApp() {
 
 // ===== THEME MANAGER (Light / Dark Mode) =====
 function initTheme() {
-    appState.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    const isDark = document.documentElement.classList.contains('dark');
+    appState.theme = isDark ? 'dark' : 'light';
     const toggleBtn = document.getElementById('theme-toggle');
     if (toggleBtn) {
+        toggleBtn.setAttribute('aria-label', 'Switch to ' + (isDark ? 'light' : 'dark') + ' mode');
         toggleBtn.addEventListener('click', toggleTheme);
     }
 }

@@ -12,9 +12,11 @@ function renderDashboard(container) {
     const avgConfidence = stats.avg_attribution_confidence ?? 0;
 
     container.innerHTML = `
-        <div class="dashboard-heading">
-            <div><h1>Overview</h1></div>
-            <span class="snapshot-label"><span class="severity-dot low"></span> Local snapshot</span>
+        <div class="dashboard-heading flex items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+                <h1 class="text-2xl font-bold tracking-tight text-text-main">Overview</h1>
+                <span class="snapshot-label"><span class="severity-dot low" aria-hidden="true"></span> Local snapshot</span>
+            </div>
         </div>
         <!-- Top Stats Row (Clean layout - no text overflow) -->
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
@@ -32,10 +34,12 @@ function renderDashboard(container) {
             <div class="stat-card flex flex-col justify-between">
                 <div class="flex flex-wrap gap-2 justify-between items-center mb-4">
                     <div>
-                        <h3 class="font-semibold text-text-main text-sm">Threat activity</h3>
-
+                        <h2 class="font-semibold text-text-main text-sm">Threat activity</h2>
                     </div>
-                    <span class="badge badge-gray">Sample · 7D</span>
+                    <button type="button" class="card-meta-pill text-text-muted hover:text-text-main hover:bg-surface-secondary transition-colors cursor-pointer" aria-label="Selected timeframe: Sample 7 days">
+                        <i class="fa-regular fa-calendar text-[10px]" aria-hidden="true"></i>
+                        <span>Sample · 7D</span>
+                    </button>
                 </div>
                 <div class="h-64 w-full">
                     <canvas id="activityChart"></canvas>
@@ -46,10 +50,10 @@ function renderDashboard(container) {
             <div class="stat-card flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-1.5">
                     <div>
-                        <h3 class="font-semibold text-text-main text-sm">Origin attribution</h3>
-                        <p id="globe-instructions" class="text-[11px] text-text-muted">Drag to rotate · Scroll to zoom</p>
+                        <h2 class="font-semibold text-text-main text-sm">Origin attribution</h2>
+                        <p id="globe-instructions" class="text-xs text-text-muted">Drag to rotate · Scroll to zoom</p>
                     </div>
-                    <span id="globe-mode" class="badge badge-gray">
+                    <span id="globe-mode" class="card-meta-pill">
                         Vector map
                     </span>
                 </div>
@@ -65,9 +69,9 @@ function renderDashboard(container) {
                 </div>
 
                 <!-- Clean Legend -->
-                <div class="mt-2.5 flex flex-wrap gap-2 items-center justify-between text-[11px] text-text-muted">
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-danger"></span> Origin IP (185.220.101.45)</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-teal-500"></span> Ingress nodes</span>
+                <div class="mt-2.5 flex flex-wrap gap-2 items-center justify-between text-xs text-text-muted">
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-danger shrink-0" aria-hidden="true"></span> Origin IP (185.220.101.45)</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-teal-500 shrink-0" aria-hidden="true"></span> Ingress nodes</span>
                     <span class="text-text-muted/80">Bucharest, RO</span>
                 </div>
             </div>
@@ -78,7 +82,7 @@ function renderDashboard(container) {
             <!-- Recent Alerts -->
             <div class="stat-card flex flex-col" style="max-height: 380px;">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-semibold text-text-main text-sm">Alerts</h3>
+                    <h2 class="font-semibold text-text-main text-sm">Alerts</h2>
                     <a href="#" onclick="event.preventDefault(); navigateTo('alerts')" class="text-xs text-primary font-medium hover:underline">View all</a>
                 </div>
                 <div class="flex-1 overflow-y-auto pr-1 space-y-3">
@@ -89,7 +93,7 @@ function renderDashboard(container) {
             <!-- Active Investigations -->
             <div class="stat-card flex flex-col" style="max-height: 380px;">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-semibold text-text-main text-sm">Active Cases</h3>
+                    <h2 class="font-semibold text-text-main text-sm">Active Cases</h2>
                     <a href="#" onclick="event.preventDefault(); navigateTo('investigations')" class="text-xs text-primary font-medium hover:underline">View all</a>
                 </div>
                 <div class="flex-1 overflow-y-auto">
@@ -105,9 +109,9 @@ function renderDashboard(container) {
             </div>
 
             <!-- Services -->
-            <div class="stat-card flex flex-col" style="max-height: 380px;">
+            <div class="stat-card flex flex-col xl:col-span-2 2xl:col-span-1" style="max-height: 380px;">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-semibold text-text-main text-sm">Services</h3>
+                    <h2 class="font-semibold text-text-main text-sm">Services</h2>
                     <a href="#" onclick="event.preventDefault(); navigateTo('services')" class="text-xs text-primary font-medium hover:underline">View all</a>
                 </div>
                 <div class="flex-1 overflow-y-auto">
@@ -126,13 +130,13 @@ function renderDashboard(container) {
         <!-- Threat categories & Confidence Overview -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
             <div class="stat-card">
-                <h3 class="font-semibold text-text-main text-sm mb-3">Threat categories</h3>
+                <h2 class="font-semibold text-text-main text-sm mb-3">Threat categories</h2>
                 <div class="h-52">
                     <canvas id="categoryChart"></canvas>
                 </div>
             </div>
             <div class="stat-card">
-                <h3 class="font-semibold text-text-main text-sm mb-3">Attribution confidence</h3>
+                <h2 class="font-semibold text-text-main text-sm mb-3">Attribution confidence</h2>
                 <div class="h-52">
                     <canvas id="confidenceChart"></canvas>
                 </div>
@@ -252,8 +256,8 @@ function statCard(icon, label, value, trend, trendColor) {
     return `
         <div class="stat-card metric-card flex flex-col justify-between p-3.5 min-w-0">
             <div class="flex items-start justify-between gap-1.5 mb-2">
-                <span class="text-[11px] font-semibold text-text-muted uppercase tracking-wider truncate" title="${label}">${label}</span>
-                <div class="w-7 h-7 rounded-md bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                <span class="text-xs font-semibold text-text-muted uppercase tracking-wider leading-tight whitespace-normal" title="${label}">${label}</span>
+                <div class="w-7 h-7 rounded-md bg-primary/10 text-primary flex items-center justify-center flex-shrink-0" aria-hidden="true">
                     <i class="${icon} text-xs"></i>
                 </div>
             </div>
@@ -280,16 +284,18 @@ function generateRecentAlerts(actors, infra) {
     }
 
     return alerts.map(a => `
-        <div class="flex items-start group">
-            <div class="severity-dot ${a.severity} mt-1.5 mr-2.5 flex-shrink-0"></div>
+        <div class="flex items-start p-2 rounded-lg hover:bg-surface-secondary/60 transition-colors border-b border-border-color-subtle last:border-none group">
+            <div class="severity-dot ${a.severity} mt-1.5 mr-2.5 flex-shrink-0" aria-hidden="true"></div>
             <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-0.5">
-                    <span class="text-[10px] font-bold uppercase ${a.severity === 'high' ? 'text-danger' : 'text-warning'}">${a.severity}</span>
-                    <span class="font-medium text-text-main text-xs truncate">${a.title}</span>
+                <div class="flex items-center justify-between gap-2 mb-0.5">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <span class="text-[10px] font-bold uppercase ${a.severity === 'high' ? 'text-danger' : 'text-warning'}">${a.severity}</span>
+                        <span class="font-medium text-text-main text-xs truncate">${a.title}</span>
+                    </div>
+                    <span class="text-xs text-text-muted shrink-0">${a.time}</span>
                 </div>
-                <p class="text-[11px] text-text-muted truncate">${a.desc}</p>
+                <p class="text-xs text-text-muted truncate">${a.desc}</p>
             </div>
-            <span class="text-[10px] text-text-muted ml-2 flex-shrink-0 mt-0.5">${a.time}</span>
         </div>
     `).join('');
 }
@@ -319,18 +325,22 @@ function generateServiceRows(infra) {
 
     return infra.map(s => {
         const isUnmasked = s.origin_attribution && s.origin_attribution.clearnet_ip;
+        const shortOnion = s.onion_address.length > 22 ? `${s.onion_address.substring(0, 16)}...onion` : s.onion_address;
         return `
             <tr>
-                <td>
-                    <div class="flex items-center min-w-0">
-                        <i class="fa-solid fa-globe text-primary mr-2 text-xs flex-shrink-0"></i>
-                        <span class="font-mono text-xs text-text-main truncate max-w-[130px]" title="${s.onion_address}">${s.onion_address.substring(0,14)}...onion</span>
+                <td class="w-7/12 py-2">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <i class="fa-solid fa-globe text-primary text-xs flex-shrink-0" aria-hidden="true"></i>
+                        <span class="font-mono text-xs text-text-main truncate max-w-[200px] sm:max-w-xs" title="${s.onion_address}">${shortOnion}</span>
+                        <button type="button" class="text-text-muted hover:text-text-main p-1 rounded hover:bg-surface-secondary transition-colors shrink-0" title="Copy address" aria-label="Copy onion address ${s.onion_address}" onclick="navigator.clipboard.writeText('${s.onion_address}')">
+                            <i class="fa-regular fa-copy text-[11px]" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </td>
-                <td>
+                <td class="w-5/12 py-2">
                     ${isUnmasked 
-                        ? `<span class="badge badge-high text-[10px]">IP: ${s.origin_attribution.clearnet_ip}</span>` 
-                        : `<span class="badge badge-low text-[10px]">Protected</span>`
+                        ? `<span class="badge badge-high text-xs normal-case font-mono"><span class="font-sans font-medium text-[10px] text-text-muted mr-1">IP</span>${s.origin_attribution.clearnet_ip}</span>` 
+                        : `<span class="badge badge-low text-xs normal-case">Protected</span>`
                     }
                 </td>
             </tr>
